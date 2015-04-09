@@ -1,9 +1,13 @@
 package org.aksw.tsoru.acids3.io;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Example;
+import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.similarity.Similarity;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -19,62 +23,71 @@ public class GetTopMatches {
 
 	private static final Logger LOGGER = Logger.getLogger(GetTopMatches.class);
 	
-	/**
-	 * Use a seed for deterministic behavior.
-	 */
-	private static final long SEED = 123;
+	protected static ArrayList<Example> get(Processing p, Instance src) {
 	
-	protected static Example get(Processing p, Example src) {
-	/*	
+		ArrayList<Example> results = new ArrayList<Example>();
+		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
-
-		cache.pick = (int) (cache.nTriples * new Random(SEED).nextDouble());
-		LOGGER.debug("Random source index = "+cache.pick);
-
-		StreamRDF dest = new StreamRDF() {
+		
+		HashMap<String, ArrayList<Integer>> index = Indexer.getIndex();
+		
+		for(String uri : index.keySet()) {
 			
-			@Override
-			public void triple(Triple triple) {
-				cache.i++;
+			LOGGER.debug("Trying with <"+uri+">...");
+			
+			final ArrayList<Integer> indices = index.get(uri);
+			final Instance inst = new Instance(uri);
+			
+			StreamRDF dest = new StreamRDF() {
 				
-				if(cache.pick != null && cache.i == cache.pick) {
-					cache.example = new Example(triple.getSubject().getURI());
-					// TODO may halt to save runtime
+				@Override
+				public void triple(Triple triple) {
+					cache.i++;
+					if(indices.contains(cache.i))
+						inst.addTriple(triple);
 				}
-			}
+				
+				@Override
+				public void start() {
+					LOGGER.debug("Scrolling of "+arg.getName()+" started.");
+				}
+				
+				@Override
+				public void finish() {
+					LOGGER.debug("Scrolling of "+arg.getName()+" finished.");
+				}
+				
+				@Override
+				public void quad(Quad quad) {}
+				
+				@Override
+				public void prefix(String prefix, String iri) {}
+				
+				@Override
+				public void base(String base) {}
+				
+			};
 			
-			@Override
-			public void start() {
-				LOGGER.debug("Scrolling of "+arg.getName()+" started.");
-			}
+			cache.iReset();
+			RDFDataMgr.parse(dest, base + param.getTargetPath());
 			
-			@Override
-			public void finish() {
-				LOGGER.debug("Scrolling of "+arg.getName()+" finished.");
-			}
+			LOGGER.debug("CBD size = "+inst.getTriples().size());
 			
-			@Override
-			public void quad(Quad quad) {}
+			Example ex = new Example(src, inst);
 			
-			@Override
-			public void prefix(String prefix, String iri) {}
+			ex.setSim(Similarity.sim(ex));
 			
-			@Override
-			public void base(String base) {}
+			results.add(ex);
 			
-		};
+			Collections.sort(results, new OrderBySimDesc());
+			
+			LOGGER.debug(results);
+		}
 		
-		RDFDataMgr.parse(dest, base + param.getSourcePath());
-		
-		cache.saveCount();
-		LOGGER.info("Example URI = "+cache.example.getURI());
-		
-		return cache.example;
-		*/
-		
+	
 		return null;
 	}
 

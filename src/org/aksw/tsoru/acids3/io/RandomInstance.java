@@ -3,7 +3,7 @@ package org.aksw.tsoru.acids3.io;
 import java.util.Random;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
-import org.aksw.tsoru.acids3.model.Example;
+import org.aksw.tsoru.acids3.model.Instance;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -15,16 +15,16 @@ import com.hp.hpl.jena.sparql.core.Quad;
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
  *
  */
-public class RandomExample {
+public class RandomInstance {
 
-	private static final Logger LOGGER = Logger.getLogger(RandomExample.class);
+	private static final Logger LOGGER = Logger.getLogger(RandomInstance.class);
 	
 	/**
 	 * Use a seed for deterministic behavior.
 	 */
 	private static final long SEED = 123;
 	
-	protected static Example get(Processing p) {
+	protected static Instance get(Processing p) {
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
@@ -41,7 +41,7 @@ public class RandomExample {
 				cache.i++;
 				
 				if(cache.pick != null && cache.i == cache.pick) {
-					cache.example = new Example(triple.getSubject().getURI());
+					cache.instance = new Instance(triple.getSubject().getURI());
 					// TODO may halt to save runtime
 				}
 			}
@@ -67,10 +67,11 @@ public class RandomExample {
 			
 		};
 		
+		cache.iReset();
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
-		LOGGER.info("Example URI = "+cache.example.getURI());
-		return cache.example;
+		LOGGER.info("Instance URI = "+cache.instance.getURI());
+		return cache.instance;
 		
 	}
 

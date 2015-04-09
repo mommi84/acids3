@@ -1,7 +1,7 @@
 package org.aksw.tsoru.acids3.io;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
-import org.aksw.tsoru.acids3.model.Example;
+import org.aksw.tsoru.acids3.model.Instance;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -17,23 +17,23 @@ public class CBDBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	protected static Example build(Processing p, Example e) {
+	protected static Instance build(Processing p, Instance inst) {
 		
-		final Example example = e;
+		final Instance instance = inst;
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 		
-		final String uri = cache.example.getURI();
+		final String uri = cache.instance.getURI();
 
 		StreamRDF dest = new StreamRDF() {
 			
 			@Override
 			public void triple(Triple triple) {
 				if(uri.equals(triple.getSubject().getURI()) || uri.equals(triple.getObject().toString()))
-					example.addTriple(triple);
+					instance.addTriple(triple);
 			}
 			
 			@Override
@@ -59,8 +59,8 @@ public class CBDBuilder {
 		
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
-		LOGGER.info("Example CBD size = "+example.getTriples().size());
-		return example;
+		LOGGER.info("Instance CBD size = "+instance.getTriples().size());
+		return instance;
 		
 	}
 

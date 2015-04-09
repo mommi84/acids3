@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
-import org.aksw.tsoru.acids3.model.Example;
+import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Oracle;
 import org.apache.log4j.Logger;
 
@@ -26,6 +26,7 @@ public class Algorithm implements Runnable {
 	public Parameters getParam() {
 		return param;
 	}
+	
 
 	public void run() {
 		LOGGER.info("Algorithm bound.");
@@ -44,12 +45,15 @@ public class Algorithm implements Runnable {
 		Processing srcPro = new Processing(Arg.SOURCE, param);
 		Processing tgtPro = new Processing(Arg.TARGET, param);
 		
+		tgtPro.index();
+		
 		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
 			LOGGER.info("Round #"+round+" of questions has started.");
 			
 			// get (pseudo-)random source example
-			Example src = (Example) srcPro.randomPick();
+			Instance src = (Instance) srcPro.randomPick();
 			
+			tgtPro.topMatches(src);
 		}
 	}
 

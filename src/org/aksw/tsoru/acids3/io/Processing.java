@@ -1,7 +1,7 @@
 package org.aksw.tsoru.acids3.io;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
-import org.aksw.tsoru.acids3.model.Example;
+import org.aksw.tsoru.acids3.model.Instance;
 import org.apache.log4j.Logger;
 
 /**
@@ -57,13 +57,21 @@ public class Processing {
 		new Processing(Arg.SOURCE, param).randomPick();
 	}
 
-	public Example randomPick() {
+	public Instance randomPick() {
 		// random pick requires count
 		if(cache.nTriples == null)
 			this.count();
-		Example e = RandomExample.get(this);
+		Instance e = RandomInstance.get(this);
 		CBDBuilder.build(this, e);
 		return e;
+	}
+
+	public void index() {
+		Indexer.index(this);
+	}
+
+	public void topMatches(Instance src) {
+		GetTopMatches.get(this, src);
 	}
 
 }
@@ -73,10 +81,14 @@ class Cache {
 	int i = 0;
 	Integer nTriples = null;
 	Integer pick = null;
-	Example example = null;
+	Instance instance = null;
 
 	protected void saveCount() {
 		nTriples = new Integer(i);
+		iReset();
+	}
+
+	public void iReset() {
 		i = 0;
 	}
 	

@@ -1,5 +1,6 @@
 package org.aksw.tsoru.acids3.algorithm;
 
+import org.aksw.tsoru.acids3.io.Arg;
 import org.apache.log4j.Logger;
 
 /**
@@ -53,6 +54,14 @@ public class Parameters {
 	public void setOraclePath(String oraclePath) {
 		LOGGER.info("oraclePath = " + oraclePath);
 		this.oraclePath = oraclePath;
+	}
+
+	public String getPath(Arg arg) {
+		if(arg == Arg.SOURCE)
+			return getSourcePath();
+		if(arg == Arg.TARGET)
+			return getTargetPath();
+		return null;
 	}
 
 }
