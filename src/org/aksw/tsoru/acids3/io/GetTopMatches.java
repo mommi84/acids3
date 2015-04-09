@@ -15,17 +15,17 @@ import com.hp.hpl.jena.sparql.core.Quad;
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
  *
  */
-public class RandomExample {
+public class GetTopMatches {
 
-	private static final Logger LOGGER = Logger.getLogger(RandomExample.class);
+	private static final Logger LOGGER = Logger.getLogger(GetTopMatches.class);
 	
 	/**
 	 * Use a seed for deterministic behavior.
 	 */
 	private static final long SEED = 123;
 	
-	protected static Example get(Processing p) {
-		
+	protected static Example get(Processing p, Example src) {
+	/*	
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
@@ -69,9 +69,13 @@ public class RandomExample {
 		
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
+		cache.saveCount();
 		LOGGER.info("Example URI = "+cache.example.getURI());
-		return cache.example;
 		
+		return cache.example;
+		*/
+		
+		return null;
 	}
 
 }

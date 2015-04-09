@@ -1,7 +1,5 @@
 package org.aksw.tsoru.acids3.io;
 
-import java.util.Random;
-
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Example;
 import org.apache.jena.riot.RDFDataMgr;
@@ -15,35 +13,27 @@ import com.hp.hpl.jena.sparql.core.Quad;
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
  *
  */
-public class RandomExample {
+public class CBDBuilder {
 
-	private static final Logger LOGGER = Logger.getLogger(RandomExample.class);
+	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	/**
-	 * Use a seed for deterministic behavior.
-	 */
-	private static final long SEED = 123;
-	
-	protected static Example get(Processing p) {
+	protected static Example build(Processing p, Example e) {
+		
+		final Example example = e;
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
-
-		cache.pick = (int) (cache.nTriples * new Random(SEED).nextDouble());
-		LOGGER.debug("Random source index = "+cache.pick);
+		
+		final String uri = cache.example.getURI();
 
 		StreamRDF dest = new StreamRDF() {
 			
 			@Override
 			public void triple(Triple triple) {
-				cache.i++;
-				
-				if(cache.pick != null && cache.i == cache.pick) {
-					cache.example = new Example(triple.getSubject().getURI());
-					// TODO may halt to save runtime
-				}
+				if(uri.equals(triple.getSubject().getURI()) || uri.equals(triple.getObject().toString()))
+					example.addTriple(triple);
 			}
 			
 			@Override
@@ -69,8 +59,8 @@ public class RandomExample {
 		
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
-		LOGGER.info("Example URI = "+cache.example.getURI());
-		return cache.example;
+		LOGGER.info("Example CBD size = "+example.getTriples().size());
+		return example;
 		
 	}
 

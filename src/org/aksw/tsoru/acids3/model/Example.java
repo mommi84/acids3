@@ -1,6 +1,6 @@
 package org.aksw.tsoru.acids3.model;
 
-import java.util.TreeSet;
+import java.util.ArrayList;
 
 import com.hp.hpl.jena.graph.Triple;
 
@@ -12,12 +12,12 @@ public class Example {
 
 	private String uri;
 
-	private TreeSet<Triple> triples;
+	private ArrayList<Triple> triples;
 
 	public Example(String uri) {
 		super();
 		this.uri = uri;
-		this.triples = new TreeSet<Triple>();
+		this.triples = new ArrayList<Triple>();
 	}
 
 	public String getURI() {
@@ -32,7 +32,7 @@ public class Example {
 		triples.add(t);
 	}
 	
-	public TreeSet<Triple> getTriples() {
+	public ArrayList<Triple> getTriples() {
 		return triples;
 	}
 	

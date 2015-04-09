@@ -61,7 +61,9 @@ public class Processing {
 		// random pick requires count
 		if(cache.nTriples == null)
 			this.count();
-		return RandomExample.get(this);
+		Example e = RandomExample.get(this);
+		CBDBuilder.build(this, e);
+		return e;
 	}
 
 }

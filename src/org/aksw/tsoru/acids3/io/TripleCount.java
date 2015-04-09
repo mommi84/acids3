@@ -16,7 +16,7 @@ public class TripleCount {
 
 	private static final Logger LOGGER = Logger.getLogger(TripleCount.class);
 	
-	public static Integer count(Processing p) {
+	protected static Integer count(Processing p) {
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
