@@ -14,6 +14,10 @@ public class Algorithm implements Runnable {
 	
 	private static final Logger LOGGER = Logger.getLogger(Algorithm.class);
 	
+	public enum Action {
+		COUNT, RANDOM_PICK
+	}
+	
 	private Parameters param;
 	
 	public Algorithm(Parameters param) {

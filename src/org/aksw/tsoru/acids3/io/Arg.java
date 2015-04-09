@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.pre;
+package org.aksw.tsoru.acids3.io;
 
 /**
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
@@ -17,8 +17,8 @@ public enum Arg {
 		return name;
 	}
 
-	int pos;
-	String name;
+	private int pos;
+	private String name;
 
 	Arg(int pos, String name) {
 		this.pos = pos;
