@@ -8,7 +8,7 @@ import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.similarity.Similarity;
+import org.aksw.tsoru.acids3.similarity.OverallSimilarity;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,6 +26,8 @@ public class GetTopMatches {
 		SQLiteManager sql = p.getSql();
 		Parameters param = p.getParam();
 		
+		OverallSimilarity osim = new OverallSimilarity();
+		
 		for(String uri : p.getIndex()) {
 			
 			LOGGER.debug("Trying with <"+uri+">...");
@@ -42,7 +44,8 @@ public class GetTopMatches {
 			LOGGER.debug("CBD size = "+inst.getTuples().size());
 			
 			Example ex = new Example(src, inst);
-			ex.setSim(Similarity.sim(ex));
+			ex.setProcessing(p);
+			ex.setSim(osim.compute(ex));
 			results.add(ex);
 			
 			Collections.sort(results, new OrderBySimDesc());
