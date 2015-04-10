@@ -16,9 +16,6 @@ package org.aksw.tsoru.acids3.similarity.functions;
  * +1 (718) 290-9170.
  */
 
-import com.aliasi.util.Distance;
-import com.aliasi.util.Proximity;
-
 /**
  * The <code>WeightedEditDistanceExtended</code> class implements both the
  * proximity and distance interfaces based on the negative proximity
@@ -134,9 +131,7 @@ import com.aliasi.util.Proximity;
  * @version 3.0
  * @since   LingPipe2.0
  */
-public abstract class WeightedEditDistanceExtended 
-    implements Distance<CharSequence>,
-               Proximity<CharSequence> {
+public abstract class WeightedEditDistanceExtended {
 
     double[][] matrix;
     
