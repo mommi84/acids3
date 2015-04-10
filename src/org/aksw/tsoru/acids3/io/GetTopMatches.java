@@ -8,6 +8,7 @@ import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.similarity.Similarity;
+import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;

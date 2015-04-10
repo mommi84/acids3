@@ -2,6 +2,7 @@ package org.aksw.tsoru.acids3.io;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
 
 /**
@@ -74,22 +75,4 @@ public class Processing {
 		GetTopMatches.get(this, src);
 	}
 
-}
-
-class Cache {
-	
-	int i = 0;
-	Integer nTriples = null;
-	Integer pick = null;
-	Instance instance = null;
-
-	protected void saveCount() {
-		nTriples = new Integer(i);
-		iReset();
-	}
-
-	public void iReset() {
-		i = 0;
-	}
-	
 }

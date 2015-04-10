@@ -64,4 +64,12 @@ public class Parameters {
 		return null;
 	}
 
+	public String getDir(Arg arg) {
+		if(arg == Arg.SOURCE)
+			return getSourcePath().substring(0, getSourcePath().lastIndexOf('/'));
+		if(arg == Arg.TARGET)
+			return getTargetPath().substring(0, getTargetPath().lastIndexOf('/'));
+		return null;
+	}
+
 }
