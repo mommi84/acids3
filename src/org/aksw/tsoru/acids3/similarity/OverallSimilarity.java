@@ -1,8 +1,11 @@
 package org.aksw.tsoru.acids3.similarity;
 
+import java.util.ArrayList;
+
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.log4j.Logger;
 
 /**
@@ -18,10 +21,10 @@ public class OverallSimilarity {
 		Instance src = ex.getSource();
 		Instance tgt = ex.getTarget();
 		
-		// XXX tests ahead
 		WEDSimilarity wed = new WEDSimilarity();
 		
-		Double dtot = 0.0;
+		ArrayList<Double> features = new ArrayList<Double>();
+		
 		for(Tuple ts : src.getTuples()) {
 			for(Tuple tt : tgt.getTuples()) {
 				if(ts.getOtype().equals("URI") && tt.getOtype().equals("URI") && ex.isParent()) {
@@ -38,13 +41,13 @@ public class OverallSimilarity {
 						else
 							src2.addInverseTuple(t);
 					}
-					for(Tuple t : tgt2.getProcessing().getSql().getTuples(ts.getO())) {
+					for(Tuple t : tgt2.getProcessing().getSql().getTuples(tt.getO())) {
 						if(t.getS().equals(tt.getO()))
 							tgt2.addTuple(t);
 						else
 							tgt2.addInverseTuple(t);
 					}
-					dtot += this.compute(ex2);
+					features.add(this.compute(ex2));
 					
 				} else if(!ts.getOtype().equals("URI") && !tt.getOtype().equals("URI")) {
 					// classic similarity comparison
@@ -55,7 +58,7 @@ public class OverallSimilarity {
 						// string similarity
 						Double sim = wed.compute(ts.getO(), tt.getO());
 						LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
-						dtot += sim;
+						features.add(sim);
 						continue;
 					}
 					// double similarity
@@ -70,14 +73,20 @@ public class OverallSimilarity {
 					logsim.setDenomArg(denomArg);
 					Double sim = logsim.compute(ts.getO(), tt.getO());
 					LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
-					dtot += sim;
+					features.add(sim);
 				} else {
 					// TODO The one is URI, the other is not.
+					features.add(0.0);
 				}
 			}
 		}
 		
-		return dtot / (src.getTuples().size() + tgt.getTuples().size());
+		Mean mean = new Mean();
+		double[] feat = new double[features.size()];
+		for(int i=0; i<feat.length; i++)
+			feat[i] = features.get(i);
+		
+		return mean.evaluate(feat);
 	}
 
 }
