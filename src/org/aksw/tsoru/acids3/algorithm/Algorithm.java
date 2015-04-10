@@ -45,6 +45,7 @@ public class Algorithm implements Runnable {
 		Processing srcPro = new Processing(Arg.SOURCE, param);
 		Processing tgtPro = new Processing(Arg.TARGET, param);
 		
+		srcPro.index();
 		tgtPro.index();
 		
 		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
@@ -52,6 +53,7 @@ public class Algorithm implements Runnable {
 			
 			// get (pseudo-)random source example
 			Instance src = (Instance) srcPro.randomPick();
+			src.setProcessing(srcPro);
 			
 			tgtPro.topMatches(src);
 		}

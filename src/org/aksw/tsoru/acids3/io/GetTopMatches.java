@@ -33,6 +33,7 @@ public class GetTopMatches {
 			LOGGER.debug("Trying with <"+uri+">...");
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			Instance inst = new Instance(uri);
+			inst.setProcessing(p);
 			
 			for(Tuple t : cbd) {
 				if(t.getS().equals(uri))
@@ -44,7 +45,6 @@ public class GetTopMatches {
 			LOGGER.debug("CBD size = "+inst.getTuples().size());
 			
 			Example ex = new Example(src, inst);
-			ex.setProcessing(p);
 			ex.setSim(osim.compute(ex));
 			results.add(ex);
 			

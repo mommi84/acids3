@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.model;
 import java.util.ArrayList;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.io.Processing;
 
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
@@ -16,6 +17,8 @@ public class Instance {
 	private String uri;
 
 	private ArrayList<Tuple> tuples;
+	
+	private Processing processing;
 
 	public Instance(String uri) {
 		super();
@@ -78,5 +81,13 @@ public class Instance {
 				t.getS(),
 				"URI"
 		));	}
+
+	public Processing getProcessing() {
+		return processing;
+	}
+
+	public void setProcessing(Processing processing) {
+		this.processing = processing;
+	}
 	
 }

@@ -1,6 +1,5 @@
 package org.aksw.tsoru.acids3.model;
 
-import org.aksw.tsoru.acids3.io.Processing;
 
 /**
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
@@ -10,9 +9,9 @@ public class Example {
 
 	private Instance source, target;
 	
-	private Processing processing;
-	
 	private Double sim;
+
+	private boolean parent = true;
 
 	public Example(Instance source, Instance target) {
 		super();
@@ -48,12 +47,12 @@ public class Example {
 		return "<" + source.getURI() + ", " + target.getURI() + ", " + sim + ">";
 	}
 
-	public Processing getProcessing() {
-		return processing;
+	public void setParent(boolean parent) {
+		this.parent = parent;
 	}
 
-	public void setProcessing(Processing processing) {
-		this.processing = processing;
+	public boolean isParent() {
+		return parent;
 	}
 	
 }

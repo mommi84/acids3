@@ -13,6 +13,10 @@ public class Cache {
 	public Integer pick = null;
 	public Instance instance = null;
 	
+	// default values
+	public Double max = Double.MIN_VALUE;
+	public Double min = Double.MAX_VALUE;
+	
 	public Cache() {
 		super();
 	}

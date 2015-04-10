@@ -1,10 +1,12 @@
 package org.aksw.tsoru.acids3.io;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
 
@@ -17,6 +19,9 @@ public class Processing {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Processing.class);
 	private static String base = "file://" + System.getProperty("user.dir") + "/";
+	
+	// TODO Replace this with a simple cache for "extrema".
+	private HashMap<String, LogarithmicSimilarity> logsims = new HashMap<String, LogarithmicSimilarity>();
 	
 	private SQLiteManager sql;
 	
@@ -85,6 +90,14 @@ public class Processing {
 	
 	public void close() {
 		sql.close();
+	}
+	
+	public LogarithmicSimilarity getLogsim(String p) {
+		return logsims.get(p);
+	}
+	
+	public void setLogsim(String p, LogarithmicSimilarity logsim) {
+		logsims.put(p, logsim);
 	}
 
 }

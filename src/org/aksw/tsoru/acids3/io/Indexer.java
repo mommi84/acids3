@@ -1,9 +1,12 @@
 package org.aksw.tsoru.acids3.io;
 
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
+import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
+import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -29,6 +32,8 @@ public class Indexer {
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 		
+		final HashMap<String, Cache> cache = new HashMap<String, Cache>();
+		
 		LOGGER.info("Indexing of "+arg.getName()+" started.");
 		
 		StreamRDF dest = new StreamRDF() {
@@ -39,6 +44,22 @@ public class Indexer {
 				instances.add(triple.getSubject().getURI());
 				if(triple.getObject().isURI())
 					instances.add(triple.getObject().getURI());
+				else {
+					Double d = null;
+					try {
+						d = Double.parseDouble("" + triple.getObject().getLiteral().getValue());
+					} catch (NumberFormatException e) {
+						return;
+					}
+					String p = triple.getPredicate().getURI();
+					if(!cache.containsKey(p)) {
+						cache.put(p, new Cache());
+					}
+					if(d > cache.get(p).max)
+						cache.get(p).max = d;
+					if(d < cache.get(p).min)
+						cache.get(p).min = d;
+				}
 			}
 			
 			@Override
@@ -67,6 +88,15 @@ public class Indexer {
 		sql.commit();
 		
 		LOGGER.info("Index done.");
+		for(String pr : cache.keySet()) {
+			LOGGER.debug(pr+": Max = "+cache.get(pr).max+", Min = "+cache.get(pr).min);
+			
+			LogarithmicSimilarity logsim = new LogarithmicSimilarity();
+			logsim.setMinMin(cache.get(pr).min);
+			logsim.setDenomArg(cache.get(pr).max);
+			p.setLogsim(pr, logsim);
+			
+		}
 		
 		return instances;
 		
