@@ -12,7 +12,8 @@ public class OrderBySimDesc implements Comparator<Example> {
 
 	@Override
 	public int compare(Example arg0, Example arg1) {
-		return arg0.getSim().compareTo(arg1.getSim());
+		// swap for decreasing order
+		return arg1.getSim().compareTo(arg0.getSim());
 	}
 
 }

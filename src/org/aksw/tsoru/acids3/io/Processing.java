@@ -1,6 +1,9 @@
 package org.aksw.tsoru.acids3.io;
 
+import java.util.TreeSet;
+
 import org.aksw.tsoru.acids3.algorithm.Parameters;
+import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
@@ -15,8 +18,11 @@ public class Processing {
 	private static final Logger LOGGER = Logger.getLogger(Processing.class);
 	private static String base = "file://" + System.getProperty("user.dir") + "/";
 	
+	private SQLiteManager sql;
+	
 	private final Arg arg;
 	private Parameters param;
+	private TreeSet<String> index;
 	
 	private final Cache cache;
 	
@@ -25,7 +31,13 @@ public class Processing {
 		this.cache = new Cache();
 		this.arg = arg;
 		this.param = param;
+		sql = new SQLiteManager(param.getPath(arg));
 	}
+	
+	public SQLiteManager getSql() {
+		return sql;
+	}
+	
 
 	public static String getBase() {
 		return base;
@@ -50,14 +62,6 @@ public class Processing {
 		return TripleCount.count(this);
 	}
 	
-	public static void main(String[] args) {
-		Parameters param = new Parameters();
-		param.setSourcePath("data/ceur-ws.ttl");
-		param.setTargetPath("data/colinda.nt");
-		param.setOraclePath("data/oracle-person1.csv");
-		new Processing(Arg.SOURCE, param).randomPick();
-	}
-
 	public Instance randomPick() {
 		// random pick requires count
 		if(cache.nTriples == null)
@@ -68,11 +72,19 @@ public class Processing {
 	}
 
 	public void index() {
-		Indexer.index(this);
+		index = Indexer.index(this);
+	}
+
+	public TreeSet<String> getIndex() {
+		return index;
 	}
 
 	public void topMatches(Instance src) {
 		GetTopMatches.get(this, src);
+	}
+	
+	public void close() {
+		sql.close();
 	}
 
 }

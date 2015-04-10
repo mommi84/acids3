@@ -11,6 +11,8 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
+ * TODO Base this on SQLite.
+ * 
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
  *
  */
@@ -60,7 +62,7 @@ public class CBDBuilder {
 		
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
-		LOGGER.info("Instance CBD size = "+instance.getTriples().size());
+		LOGGER.info("Instance CBD size = "+instance.getTuples().size());
 		return instance;
 		
 	}

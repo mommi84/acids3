@@ -55,6 +55,9 @@ public class Algorithm implements Runnable {
 			
 			tgtPro.topMatches(src);
 		}
+		
+		srcPro.close();
+		tgtPro.close();
 	}
 
 }

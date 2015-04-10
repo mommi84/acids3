@@ -1,16 +1,14 @@
 package org.aksw.tsoru.acids3.io;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
-import org.aksw.tsoru.acids3.util.Cache;
+import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
@@ -21,15 +19,12 @@ public class Indexer {
 
 	private static final Logger LOGGER = Logger.getLogger(Indexer.class);
 	
-	private static HashMap<String, ArrayList<Integer>> index = new HashMap<String, ArrayList<Integer>>();
-	
-	public static HashMap<String, ArrayList<Integer>> getIndex() {
-		return index;
-	}
-
-	protected static void index(Processing p) {
+	protected static TreeSet<String> index(Processing p) {
 		
-		final Cache cache = p.getCache();
+		final TreeSet<String> instances = new TreeSet<String>();
+		
+		final SQLiteManager sql = p.getSql();
+
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
@@ -40,29 +35,10 @@ public class Indexer {
 			
 			@Override
 			public void triple(Triple triple) {
-				
-				cache.i++;
-				
-				String sURI = triple.getSubject().getURI();
-				
-				if(!index.containsKey(sURI)) {
-					ArrayList<Integer> arr = new ArrayList<Integer>();
-					arr.add(cache.i);
-					index.put(sURI, arr);
-				} else {
-					index.get(sURI).add(cache.i);
-				}
-
-				if(triple.getObject() instanceof Resource) {
-					String oURI = triple.getObject().getURI();
-					if(!index.containsKey(oURI)) {
-						ArrayList<Integer> arr = new ArrayList<Integer>();
-						arr.add(cache.i);
-						index.put(oURI, arr);
-					} else {
-						index.get(oURI).add(cache.i);
-					}
-				}
+				sql.insert(triple);
+				instances.add(triple.getSubject().getURI());
+				if(triple.getObject().isURI())
+					instances.add(triple.getObject().getURI());
 			}
 			
 			@Override
@@ -86,10 +62,13 @@ public class Indexer {
 			
 		};
 		
-		cache.iReset();
 		RDFDataMgr.parse(dest, base + param.getPath(arg));
 		
-		LOGGER.debug("Index = "+index);
+		sql.commit();
+		
+		LOGGER.info("Index done.");
+		
+		return instances;
 		
 	}
 
