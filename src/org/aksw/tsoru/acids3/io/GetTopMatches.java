@@ -32,8 +32,12 @@ public class GetTopMatches {
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			Instance inst = new Instance(uri);
 			
-			for(Tuple t : cbd)
-				inst.addTuple(t);
+			for(Tuple t : cbd) {
+				if(t.getS().equals(uri))
+					inst.addTuple(t);
+				else
+					inst.addInverseTuple(t);
+			}
 			
 			LOGGER.debug("CBD size = "+inst.getTuples().size());
 			

@@ -35,8 +35,10 @@ public class CBDBuilder {
 			
 			@Override
 			public void triple(Triple triple) {
-				if(uri.equals(triple.getSubject().getURI()) || uri.equals(triple.getObject().toString()))
+				if(uri.equals(triple.getSubject().getURI()))
 					instance.addTriple(triple);
+				if(uri.equals(triple.getObject().toString()))
+					instance.addInverseTriple(triple);
 			}
 			
 			@Override

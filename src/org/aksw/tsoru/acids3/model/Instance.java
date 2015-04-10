@@ -61,5 +61,22 @@ public class Instance {
 				o, otype
 		));
 	}
+
+	public void addInverseTriple(Triple triple) {
+		this.addTuple(new Tuple(
+				triple.getObject().getURI(),
+				triple.getPredicate().getURI() + "_INV",
+				triple.getSubject().getURI(),
+				"URI"
+		));
+	}
+	
+	public void addInverseTuple(Tuple t) {
+		this.addTuple(new Tuple(
+				t.getO(),
+				t.getP() + "_INV",
+				t.getS(),
+				"URI"
+		));	}
 	
 }
