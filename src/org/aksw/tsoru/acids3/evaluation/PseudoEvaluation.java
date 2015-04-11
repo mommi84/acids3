@@ -21,7 +21,7 @@ public class PseudoEvaluation {
 	
 	private static final Logger LOGGER = Logger.getLogger(PseudoEvaluation.class);
 	
-	private static final int TEST_SET_SIZE = 500;
+	private static final int TEST_SET_SIZE = 27000;
 
 	public static void run(SeqMinOptSVM svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
 		
@@ -32,6 +32,9 @@ public class PseudoEvaluation {
 		
 		OverallSimilarity osim = new OverallSimilarity();
 		svm.initTest(TEST_SET_SIZE);
+		
+		LOGGER.info("Theoretical test set size = "+(src.size() * tgt.size()));
+		LOGGER.info("Pseudo-evaluation test set size = "+TEST_SET_SIZE);
 		
 		for(int i=0; i<TEST_SET_SIZE; i++) {
 			String s = src.get((int) (src.size() * Math.random()));
@@ -56,14 +59,16 @@ public class PseudoEvaluation {
 			}
 			
 			Example ex = new Example(inst1, inst2);
-			LOGGER.info("Evaluating "+ex+"...");
-			
-			ex.setSim(osim.compute(ex));
-			ex.spoil(featureNames);
 			if(oracle.get(s) == null)
 				ex.setLabel(false);
 			else
 				ex.setLabel(oracle.get(s).equals(t));
+			LOGGER.info("Evaluating "+ex+"... (label = "+ex.getLabel()+")");
+			
+			ex.setSim(osim.compute(ex));
+			ex.spoil(featureNames);
+			LOGGER.info(ex.getFeatures());
+			
 			
 			svm.addTestInstance(ex);
 				
