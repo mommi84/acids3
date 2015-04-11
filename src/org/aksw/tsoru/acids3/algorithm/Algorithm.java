@@ -1,9 +1,14 @@
 package org.aksw.tsoru.acids3.algorithm;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
+import org.aksw.tsoru.acids3.learner.SeqMinOptSVM;
+import org.aksw.tsoru.acids3.math.PointPlaneDistance;
+import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Oracle;
 import org.apache.log4j.Logger;
@@ -48,6 +53,9 @@ public class Algorithm implements Runnable {
 		srcPro.index();
 		tgtPro.index();
 		
+		// classifier
+		SeqMinOptSVM svm = new SeqMinOptSVM();
+		
 		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
 			LOGGER.info("Round #"+round+" of questions has started.");
 			
@@ -55,11 +63,36 @@ public class Algorithm implements Runnable {
 			Instance src = (Instance) srcPro.randomPick();
 			src.setProcessing(srcPro);
 			
-			tgtPro.topMatches(src);
+			ArrayList<Example> topM = tgtPro.topMatches(src);
+			for(Example ex : topM) {
+				String s = ex.getSource().getURI();
+				String t = ex.getTarget().getURI();
+				LOGGER.info("Are <"+s+"> and <"+t+"> the same?");
+				for(Tuple tu : ex.getSource().getTuples())
+					LOGGER.debug(tu);
+				for(Tuple tu : ex.getTarget().getTuples())
+					LOGGER.debug(tu);
+				LOGGER.info("Answer: "+oracle.get(s).equals(t));
+				ex.setLabel(oracle.get(s).equals(t));
+				LOGGER.info(ex.getFeatures().size());
+			}
+			
+			svm.init(topM.get(0), topM.size());
+			
+			for(Example ex : topM)
+				svm.addInstance(ex);
+			
+			svm.train(true);
+			
+			for(Example ex : topM)
+				LOGGER.info(ex
+						+ " | d = " + PointPlaneDistance.compute(ex, svm.getWeights(), svm.getBias())
+						+ " | c(x) = " + svm.classify(ex));
 		}
 		
 		srcPro.close();
 		tgtPro.close();
 	}
+
 
 }

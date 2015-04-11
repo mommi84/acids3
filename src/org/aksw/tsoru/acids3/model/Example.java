@@ -1,5 +1,7 @@
 package org.aksw.tsoru.acids3.model;
 
+import java.util.ArrayList;
+
 
 /**
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
@@ -9,9 +11,18 @@ public class Example {
 
 	private Instance source, target;
 	
+	private ArrayList<Double> features;
+	private ArrayList<String> names;
+	
 	private Double sim;
 
 	private boolean parent = true;
+
+	public boolean getLabel() {
+		return label;
+	}
+
+	private boolean label = false;
 
 	public Example(Instance source, Instance target) {
 		super();
@@ -53,6 +64,26 @@ public class Example {
 
 	public boolean isParent() {
 		return parent;
+	}
+
+	public ArrayList<Double> getFeatures() {
+		return features;
+	}
+
+	public void setFeatures(ArrayList<Double> features) {
+		this.features = features;
+	}
+
+	public void setLabel(boolean label) {
+		this.label  = label;
+	}
+
+	public void setNames(ArrayList<String> names) {
+		this.names = names;
+	}
+
+	public ArrayList<String> getNames() {
+		return names;
 	}
 	
 }

@@ -24,6 +24,7 @@ public class OverallSimilarity {
 		WEDSimilarity wed = new WEDSimilarity();
 		
 		ArrayList<Double> features = new ArrayList<Double>();
+		ArrayList<String> featureNames = new ArrayList<String>();
 		
 		for(Tuple ts : src.getTuples()) {
 			for(Tuple tt : tgt.getTuples()) {
@@ -48,7 +49,8 @@ public class OverallSimilarity {
 							tgt2.addInverseTuple(t);
 					}
 					features.add(this.compute(ex2));
-					
+					featureNames.add("all("+ts.getP()+","+tt.getP()+")");
+
 				} else if(!ts.getOtype().equals("URI") && !tt.getOtype().equals("URI")) {
 					// classic similarity comparison
 					try {
@@ -59,6 +61,7 @@ public class OverallSimilarity {
 						Double sim = wed.compute(ts.getO(), tt.getO());
 						LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
 						features.add(sim);
+						featureNames.add("wed("+ts.getP() +"," + tt.getP()+")");
 						continue;
 					}
 					// double similarity
@@ -74,9 +77,11 @@ public class OverallSimilarity {
 					Double sim = logsim.compute(ts.getO(), tt.getO());
 					LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
 					features.add(sim);
+					featureNames.add("lgs("+ts.getP() +"," + tt.getP()+")");
 				} else {
 					// TODO The one is URI, the other is not.
 					features.add(0.0);
+					featureNames.add("zero("+ts.getP() +"," + tt.getP()+")");
 				}
 			}
 		}
@@ -85,6 +90,9 @@ public class OverallSimilarity {
 		double[] feat = new double[features.size()];
 		for(int i=0; i<feat.length; i++)
 			feat[i] = features.get(i);
+		
+		ex.setFeatures(features);
+		ex.setNames(featureNames);
 		
 		return mean.evaluate(feat);
 	}

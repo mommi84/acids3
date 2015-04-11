@@ -48,6 +48,9 @@ public class Tuple {
 		this.otype = otype;
 	}
 	
+	public String toString() {
+		return s + " " + p + " " + o;
+	}
 	
 
 }

@@ -21,6 +21,8 @@ public class GetTopMatches {
 	
 	protected static ArrayList<Example> get(Processing p, Instance src) {
 	
+		LOGGER.info("Computing similarity matches for property alignment...");
+		
 		ArrayList<Example> results = new ArrayList<Example>();
 		
 		SQLiteManager sql = p.getSql();
@@ -55,9 +57,8 @@ public class GetTopMatches {
 		}
 		
 		LOGGER.info("Examples to label: " + results);
-		
 	
-		return null;
+		return results;
 	}
 
 }
