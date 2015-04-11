@@ -1,6 +1,7 @@
 package org.aksw.tsoru.acids3.model;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 
 /**
@@ -84,6 +85,22 @@ public class Example {
 
 	public ArrayList<String> getNames() {
 		return names;
+	}
+
+	/**
+	 * Keep only features from featureNames.
+	 * 
+	 * @param featureNames
+	 */
+	public void spoil(TreeSet<String> featureNames) {
+		ArrayList<Double> newFeats = new ArrayList<Double>();
+		for(String newName : featureNames)
+			if(names.contains(newName)) 
+				newFeats.add(features.get(names.indexOf(newName)));
+			else
+				newFeats.add(0.0);
+		this.setFeatures(newFeats);
+		this.setNames(new ArrayList<String>(featureNames));
 	}
 	
 }

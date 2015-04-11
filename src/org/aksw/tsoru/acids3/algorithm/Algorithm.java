@@ -2,8 +2,10 @@ package org.aksw.tsoru.acids3.algorithm;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.evaluation.PseudoEvaluation;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SeqMinOptSVM;
@@ -11,7 +13,6 @@ import org.aksw.tsoru.acids3.math.PointPlaneDistance;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Oracle;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -57,6 +58,9 @@ public class Algorithm implements Runnable {
 		// classifier
 		SeqMinOptSVM svm = new SeqMinOptSVM();
 		
+		// feature names
+		TreeSet<String> featureNames = new TreeSet<String>();
+		
 		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
 			LOGGER.info("Round #"+round+" of questions has started.");
 			
@@ -75,6 +79,7 @@ public class Algorithm implements Runnable {
 					LOGGER.debug(tu);
 				LOGGER.info("Answer: "+oracle.get(s).equals(t));
 				ex.setLabel(oracle.get(s).equals(t));
+				featureNames.addAll(ex.getNames());
 			}
 			
 			svm.init(topM.get(0), topM.size());
@@ -82,13 +87,14 @@ public class Algorithm implements Runnable {
 			for(Example ex : topM)
 				svm.addInstance(ex);
 			
-			// lowest = ALL (everything on)
-			svm.train(LOGGER.getLevel().isGreaterOrEqual(Level.DEBUG));
+			svm.train(true);
 			
 			for(Example ex : topM)
 				LOGGER.info(ex
 						+ " | d = " + PointPlaneDistance.compute(ex, svm.getWeights(), svm.getBias())
 						+ " | c(x) = " + svm.classify(ex));
+			
+			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
 		}
 		
 		srcPro.close();
