@@ -11,6 +11,7 @@ import org.aksw.tsoru.acids3.math.PointPlaneDistance;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Oracle;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -67,14 +68,13 @@ public class Algorithm implements Runnable {
 			for(Example ex : topM) {
 				String s = ex.getSource().getURI();
 				String t = ex.getTarget().getURI();
-				LOGGER.info("Are <"+s+"> and <"+t+"> the same?");
+				LOGGER.info("Question: Are <"+s+"> and <"+t+"> the same?");
 				for(Tuple tu : ex.getSource().getTuples())
 					LOGGER.debug(tu);
 				for(Tuple tu : ex.getTarget().getTuples())
 					LOGGER.debug(tu);
 				LOGGER.info("Answer: "+oracle.get(s).equals(t));
 				ex.setLabel(oracle.get(s).equals(t));
-				LOGGER.info(ex.getFeatures().size());
 			}
 			
 			svm.init(topM.get(0), topM.size());
@@ -82,7 +82,8 @@ public class Algorithm implements Runnable {
 			for(Example ex : topM)
 				svm.addInstance(ex);
 			
-			svm.train(true);
+			// lowest = ALL (everything on)
+			svm.train(LOGGER.getLevel().isGreaterOrEqual(Level.DEBUG));
 			
 			for(Example ex : topM)
 				LOGGER.info(ex

@@ -119,7 +119,7 @@ public class SeqMinOptSVM {
 		double cl;
 		try {
 			cl = cModel.classifyInstance(inst);
-			LOGGER.info("classify: " + cl);
+			LOGGER.debug("classify: " + cl);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 			return false;
