@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
+import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
@@ -86,8 +87,8 @@ public class Processing {
 		return index;
 	}
 
-	public ArrayList<Example> topMatches(Instance src) {
-		return GetTopMatches.get(this, src);
+	public ArrayList<Example> topMatches(Instance src, final ReededFilter filter) {
+		return GetTopMatches.get(this, src, filter);
 	}
 	
 	public void close() {

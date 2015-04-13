@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.util.Randomly;
+import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;
@@ -97,6 +98,7 @@ public class SQLiteManager {
 		try {
 			rs = statement
 					.executeQuery("select * from triples where s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI');");
+//					.executeQuery("select * from triples where (s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI')) and p <> '"+URLs.RDF_TYPE+"';");
 			while (rs.next()) {
 				// read the result set
 				Tuple t = new Tuple(rs.getString("s"), rs.getString("p"), rs.getString("o"), rs.getString("otype"));

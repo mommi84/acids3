@@ -3,8 +3,10 @@ package org.aksw.tsoru.acids3.similarity;
 import java.util.ArrayList;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.log4j.Logger;
 
@@ -16,7 +18,11 @@ public class OverallSimilarity {
 	
 	private static final Logger LOGGER = Logger.getLogger(OverallSimilarity.class);
 	
-	public Double compute(Example ex) {
+	public OverallSimilarity() {
+		super();
+	}
+	
+	public Double compute(Example ex, final ReededFilter filter) {
 		
 		Instance src = ex.getSource();
 		Instance tgt = ex.getTarget();
@@ -27,7 +33,9 @@ public class OverallSimilarity {
 		ArrayList<String> featureNames = new ArrayList<String>();
 		
 		for(Tuple ts : src.getTuples()) {
+			
 			for(Tuple tt : tgt.getTuples()) {
+				
 				if(ts.getOtype().equals("URI") && tt.getOtype().equals("URI") && ex.isParent()) {
 					
 					Instance src2 = new Instance(ts.getO());
@@ -48,7 +56,9 @@ public class OverallSimilarity {
 						else
 							tgt2.addInverseTuple(t);
 					}
-					features.add(this.compute(ex2));
+					Double sim = this.compute(ex2, filter);
+					LOGGER.debug("all("+ts.getO()+","+tt.getO()+") = "+sim);
+					features.add(sim);
 					featureNames.add("all("+ts.getP()+","+tt.getP()+")");
 
 				} else if(!ts.getOtype().equals("URI") && !tt.getOtype().equals("URI")) {
@@ -58,8 +68,20 @@ public class OverallSimilarity {
 						Double.parseDouble(tt.getO());
 					} catch (NumberFormatException e) {
 						// string similarity
+						if(filter != null) {
+							double threshold = 0.6;
+							if(ex.isParent())
+								LOGGER.debug(ts.getO()+", "+tt.getO()+", "+threshold);
+							if(!filter.filter(ts.getO(), tt.getO(), threshold)) { // didn't make the cut
+								if(ex.isParent())
+									LOGGER.debug(" ---> didn't make the cut");
+								return null;
+							}
+						}
+						// actual similarity computation
 						Double sim = wed.compute(ts.getO(), tt.getO());
-						LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
+						if(ex.isParent())
+							LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
 						features.add(sim);
 						featureNames.add("wed("+ts.getP() +"," + tt.getP()+")");
 						continue;
@@ -75,11 +97,14 @@ public class OverallSimilarity {
 					logsim.setMinMin(minMin);
 					logsim.setDenomArg(denomArg);
 					Double sim = logsim.compute(ts.getO(), tt.getO());
-					LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
+					if(ex.isParent())
+						LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("lgs("+ts.getP() +"," + tt.getP()+")");
 				} else {
 					// TODO The one is URI, the other is not.
+					if(ex.isParent())
+						LOGGER.debug("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
 					features.add(0.0);
 					featureNames.add("zero("+ts.getP() +"," + tt.getP()+")");
 				}
@@ -88,8 +113,10 @@ public class OverallSimilarity {
 		
 		Mean mean = new Mean();
 		double[] feat = new double[features.size()];
-		for(int i=0; i<feat.length; i++)
+		for(int i=0; i<feat.length; i++) {
 			feat[i] = features.get(i);
+			LOGGER.debug(feat[i]);
+		}
 		
 		ex.setFeatures(features);
 		ex.setNames(featureNames);

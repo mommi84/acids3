@@ -60,7 +60,7 @@ public class Algorithm implements Runnable {
 		SMOSVMClassifier svm = new SMOSVMClassifier();
 		
 		// feature names
-		TreeSet<String> featureNames = new TreeSet<String>();
+		ArrayList<String> featureNames = new ArrayList<String>();
 		
 		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
 			LOGGER.info("Round #"+round+" of questions has started.");
@@ -69,7 +69,7 @@ public class Algorithm implements Runnable {
 			Instance src = (Instance) srcPro.randomPick();
 			src.setProcessing(srcPro);
 			
-			ArrayList<Example> topM = tgtPro.topMatches(src);
+			ArrayList<Example> topM = tgtPro.topMatches(src, null);
 			for(Example ex : topM) {
 				String s = ex.getSource().getURI();
 				String t = ex.getTarget().getURI();
@@ -80,7 +80,10 @@ public class Algorithm implements Runnable {
 					LOGGER.debug(tu);
 				LOGGER.info("Answer: "+oracle.get(s).equals(t));
 				ex.setLabel(oracle.get(s).equals(t));
-				featureNames.addAll(ex.getNames());
+				
+				for(String name : ex.getNames())
+					if(!featureNames.contains(name))
+						featureNames.add(name);
 			}
 			
 			svm.init(topM.get(0), topM.size());

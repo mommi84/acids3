@@ -17,7 +17,8 @@ public class WEDSimilarity implements Similarity {
 	public static final double INIT_FULL_WEIGHT = 1.0;
 	public static final double INIT_CASE_WEIGHT = 0.5;
 	private static HashMap<String, Double> weights = new HashMap<String, Double>();
-	
+	private static double minWeight = Double.MAX_VALUE;
+
 	public WEDSimilarity() {
 		super();
 		// load weights once
@@ -106,10 +107,20 @@ public class WEDSimilarity implements Similarity {
 			}
 		}
 		in.close();
+		
+		// update min weight
+		for(Double d : weights.values())
+			if(d < minWeight)
+				minWeight = d;
+		
 	}
 
 	public HashMap<String, Double> getWeights() {
 		return weights;
+	}
+	
+	public static double getMinWeight() {
+		return minWeight;
 	}
 	
 }

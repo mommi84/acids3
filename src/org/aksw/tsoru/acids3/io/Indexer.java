@@ -7,6 +7,7 @@ import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
+import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -40,18 +41,24 @@ public class Indexer {
 			
 			@Override
 			public void triple(Triple triple) {
+				
+				String p = triple.getPredicate().getURI();
+				if(p.equals(URLs.RDF_TYPE))
+					return;
+					
 				sql.insert(triple);
 				instances.add(triple.getSubject().getURI());
+				
 				if(triple.getObject().isURI())
 					instances.add(triple.getObject().getURI());
 				else {
+					// compute minimum and maximum for double values
 					Double d = null;
 					try {
 						d = Double.parseDouble("" + triple.getObject().getLiteral().getValue());
 					} catch (NumberFormatException e) {
 						return;
 					}
-					String p = triple.getPredicate().getURI();
 					if(!cache.containsKey(p)) {
 						cache.put(p, new Cache());
 					}
@@ -60,6 +67,7 @@ public class Indexer {
 					if(d < cache.get(p).min)
 						cache.get(p).min = d;
 				}
+					
 			}
 			
 			@Override

@@ -5,6 +5,7 @@ import java.util.Random;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Cache;
+import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -35,10 +36,17 @@ public class RandomInstance {
 		cache.pick = (int) (cache.nTriples * new Random(SEED).nextDouble());
 		LOGGER.debug("Random source index = "+cache.pick);
 
+		// TODO use reservoir sampling to traverse the files only once
+		
 		StreamRDF dest = new StreamRDF() {
 			
 			@Override
 			public void triple(Triple triple) {
+				
+				String p = triple.getPredicate().getURI();
+				if(p.equals(URLs.RDF_TYPE))
+					return;
+				
 				cache.i++;
 				
 				if(cache.pick != null && cache.i == cache.pick) {

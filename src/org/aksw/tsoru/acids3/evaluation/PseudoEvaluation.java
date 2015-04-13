@@ -23,7 +23,7 @@ public class PseudoEvaluation {
 	
 	private static final int TEST_SET_SIZE = 27000;
 
-	public static void run(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
+	public static void run(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, ArrayList<String> featureNames) {
 		
 		ArrayList<String> src = new ArrayList<String>(srcPro.getIndex());
 		ArrayList<String> tgt = new ArrayList<String>(tgtPro.getIndex());
@@ -65,7 +65,7 @@ public class PseudoEvaluation {
 				ex.setLabel(oracle.get(s).equals(t));
 			LOGGER.info("Evaluating "+ex+"... (label = "+ex.getLabel()+")");
 			
-			ex.setSim(osim.compute(ex));
+			ex.setSim(osim.compute(ex, null));
 			ex.spoil(featureNames);
 			LOGGER.info(ex.getFeatures());
 			

@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.io;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Cache;
+import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.log4j.Logger;
@@ -35,6 +36,11 @@ public class CBDBuilder {
 			
 			@Override
 			public void triple(Triple triple) {
+				
+				String p = triple.getPredicate().getURI();
+				if(p.equals(URLs.RDF_TYPE))
+					return;
+				
 				if(uri.equals(triple.getSubject().getURI()))
 					instance.addTriple(triple);
 				if(uri.equals(triple.getObject().toString()))

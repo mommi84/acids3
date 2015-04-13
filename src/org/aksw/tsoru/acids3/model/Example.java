@@ -92,7 +92,7 @@ public class Example {
 	 * 
 	 * @param featureNames
 	 */
-	public void spoil(TreeSet<String> featureNames) {
+	public void spoil(ArrayList<String> featureNames) {
 		ArrayList<Double> newFeats = new ArrayList<Double>();
 		for(String newName : featureNames)
 			if(names.contains(newName)) 
