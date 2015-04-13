@@ -46,4 +46,10 @@ public class Oracle  {
 		return map.keySet();
 	}
 
+	public boolean ask(String s, String t) {
+		if(map.containsKey(s))
+			return map.get(s).equals(t);
+		return false;
+	}
+
 }

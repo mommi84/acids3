@@ -6,7 +6,6 @@ import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.log4j.Logger;
 
@@ -118,8 +117,8 @@ public class OverallSimilarity {
 			LOGGER.debug(feat[i]);
 		}
 		
-		ex.setFeatures(features);
-		ex.setNames(featureNames);
+		for(int i=0; i<featureNames.size(); i++)
+			ex.setFeature(featureNames.get(i), features.get(i));
 		
 		return mean.evaluate(feat);
 	}

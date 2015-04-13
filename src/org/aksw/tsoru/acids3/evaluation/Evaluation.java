@@ -21,7 +21,7 @@ public class Evaluation {
 
 	private static final Logger LOGGER = Logger.getLogger(Evaluation.class);
 
-	public static void recall(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, ArrayList<String> featureNames) {
+	public static void recall(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
 		
 		LOGGER.info("Starting RECALL evaluation");
 		
@@ -66,8 +66,8 @@ public class Evaluation {
 			// TODO might use filtering for faster evaluation
 			ex.setSim(osim.compute(ex, null));
 			ex.spoil(featureNames);
-			LOGGER.info(ex.getFeatures());
-			LOGGER.info(ex.getNames());
+			LOGGER.debug("NAMES: "+ex.getFeatureNames());
+			LOGGER.debug("FEATS: "+ex.getFeatures());
 			
 			svm.addTestInstance(ex);
 			

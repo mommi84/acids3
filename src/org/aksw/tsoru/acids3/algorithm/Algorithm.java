@@ -6,7 +6,6 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
-import org.aksw.tsoru.acids3.evaluation.PseudoEvaluation;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
@@ -59,47 +58,54 @@ public class Algorithm implements Runnable {
 		// classifier
 		SMOSVMClassifier svm = new SMOSVMClassifier();
 		
-		// feature names
-		ArrayList<String> featureNames = new ArrayList<String>();
+		// features present in training set
+		TreeSet<String> trainFeatures = new TreeSet<String>();
 		
-		for(int round = 1; round <= param.ROUNDS_ACTIVE; round ++) {
+		for(int round = 1; round <= Parameters.ROUNDS_ACTIVE; round ++) {
 			LOGGER.info("Round #"+round+" of questions has started.");
 			
-			// get (pseudo-)random source example
-			Instance src = (Instance) srcPro.randomPick();
-			src.setProcessing(srcPro);
+			ArrayList<Example> training = new ArrayList<Example>();
 			
-			ArrayList<Example> topM = tgtPro.topMatches(src, null);
-			for(Example ex : topM) {
-				String s = ex.getSource().getURI();
-				String t = ex.getTarget().getURI();
-				LOGGER.info("Question: Are <"+s+"> and <"+t+"> the same?");
-				for(Tuple tu : ex.getSource().getTuples())
-					LOGGER.debug(tu);
-				for(Tuple tu : ex.getTarget().getTuples())
-					LOGGER.debug(tu);
-				LOGGER.info("Answer: "+oracle.get(s).equals(t));
-				ex.setLabel(oracle.get(s).equals(t));
+			for(int j=0; j<Parameters.QUERIES_PER_ROUND; j++) {
+				// get (pseudo-)random source example
+				Instance src = (Instance) srcPro.randomPick();
+				src.setProcessing(srcPro);
 				
-				for(String name : ex.getNames())
-					if(!featureNames.contains(name))
-						featureNames.add(name);
+				ArrayList<Example> topM = tgtPro.topMatches(src, null);
+				for(Example ex : topM) {
+					String s = ex.getSource().getURI();
+					String t = ex.getTarget().getURI();
+					LOGGER.info("Question: Are <"+s+"> and <"+t+"> the same?");
+					for(Tuple tu : ex.getSource().getTuples())
+						LOGGER.debug(tu);
+					for(Tuple tu : ex.getTarget().getTuples())
+						LOGGER.debug(tu);
+					LOGGER.info("Answer: "+oracle.ask(s, t));
+					ex.setLabel(oracle.ask(s, t));
+					
+					trainFeatures.addAll(ex.getFeatureNames());
+				}
+				
+				training.addAll(topM);
 			}
 			
-			svm.init(topM.get(0), topM.size());
+			for(Example ex : training)
+				ex.spoil(trainFeatures);
 			
-			for(Example ex : topM)
+			svm.init(training.get(0), training.size());
+			
+			for(Example ex : training)
 				svm.addInstance(ex);
 			
 			svm.train(true);
 			
-			for(Example ex : topM)
+			for(Example ex : training)
 				LOGGER.info(ex
 						+ " | d = " + PointPlaneDistance.compute(ex, svm.getWeights(), svm.getBias())
 						+ " | c(x) = " + svm.classify(ex));
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
-			Evaluation.recall(svm, oracle, srcPro, tgtPro, featureNames);
+			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
 		}
 		
 		srcPro.close();

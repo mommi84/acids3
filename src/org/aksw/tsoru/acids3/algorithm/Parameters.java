@@ -11,19 +11,24 @@ public class Parameters {
 
 	private static final Logger LOGGER = Logger.getLogger(Parameters.class);
 
+	/**
+	 * Number of queries to the oracle per round.
+	 */
+	public static final int QUERIES_PER_ROUND = 0;
+
 	private String sourcePath, targetPath, oraclePath;
 
 	/**
 	 * Number of rounds for the active learning setting.
 	 */
-	public final int ROUNDS_ACTIVE = 1;
+	public static final int ROUNDS_ACTIVE = 1;
 
 	/**
-	 * Maximum number of examples per round. The minimum per kind (positive and
+	 * Maximum number of examples per query. The minimum per kind (positive and
 	 * negative) is one, however the research will end after this number of
 	 * examples.
 	 */
-	public final int MAX_EX_ROUND = 5;
+	public static final int EX_PER_QUERY = 5;
 
 	public Parameters() {
 		super();

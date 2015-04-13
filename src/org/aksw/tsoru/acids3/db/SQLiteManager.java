@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.util.Randomly;
-import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Node;

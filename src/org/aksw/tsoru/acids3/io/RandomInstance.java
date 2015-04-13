@@ -24,7 +24,7 @@ public class RandomInstance {
 	/**
 	 * Use a seed for deterministic behavior.
 	 */
-	private static final long SEED = 123;
+//	private static final long SEED = 123;
 	
 	protected static Instance get(Processing p) {
 		
@@ -33,7 +33,7 @@ public class RandomInstance {
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 
-		cache.pick = (int) (cache.nTriples * new Random(SEED).nextDouble());
+		cache.pick = (int) (cache.nTriples * new Random().nextDouble());
 		LOGGER.debug("Random source index = "+cache.pick);
 
 		// TODO use reservoir sampling to traverse the files only once

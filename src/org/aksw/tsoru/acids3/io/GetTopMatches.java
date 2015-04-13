@@ -27,7 +27,6 @@ public class GetTopMatches {
 		ArrayList<Example> results = new ArrayList<Example>();
 		
 		SQLiteManager sql = p.getSql();
-		Parameters param = p.getParam();
 		
 		OverallSimilarity osim = new OverallSimilarity();
 		
@@ -59,7 +58,7 @@ public class GetTopMatches {
 			
 			// TODO sort every N loops?
 			Collections.sort(results, new OrderBySimDesc());
-			for(int i=param.MAX_EX_ROUND; i<results.size(); i++)
+			for(int i=Parameters.EX_PER_QUERY; i<results.size(); i++)
 				results.remove(i);
 			
 		}

@@ -1,6 +1,7 @@
 package org.aksw.tsoru.acids3.model;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 
@@ -12,8 +13,7 @@ public class Example {
 
 	private Instance source, target;
 	
-	private ArrayList<Double> features;
-	private ArrayList<String> names;
+	private HashMap<String, Double> features;
 	
 	private Double sim;
 
@@ -29,6 +29,7 @@ public class Example {
 		super();
 		this.source = source;
 		this.target = target;
+		features = new HashMap<String, Double>();
 	}
 
 	public Instance getSource() {
@@ -66,41 +67,56 @@ public class Example {
 	public boolean isParent() {
 		return parent;
 	}
-
-	public ArrayList<Double> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(ArrayList<Double> features) {
-		this.features = features;
-	}
-
+	
 	public void setLabel(boolean label) {
 		this.label  = label;
 	}
 
-	public void setNames(ArrayList<String> names) {
-		this.names = names;
+	public Collection<Double> getFeatures() {
+//		ArrayList<Double> f = new ArrayList<Double>();
+//		for(String key : features.keySet())
+//			f.add(features.get(key));
+//		return f;
+		return features.values();
 	}
 
-	public ArrayList<String> getNames() {
-		return names;
+//	public void setFeatures(ArrayList<Double> features) {
+//		this.features = features;
+//	}
+//
+//
+//	public void setNames(ArrayList<String> names) {
+//		this.names = names;
+//	}
+//
+	public Collection<String> getFeatureNames() {
+		return features.keySet();
+	}
+	
+	public void setFeature(String name, Double value) {
+		features.put(name, value);
 	}
 
 	/**
-	 * Keep only features from featureNames.
+	 * Keep only features from featureNames, as other features have no SVM weight associated.
 	 * 
 	 * @param featureNames
 	 */
-	public void spoil(ArrayList<String> featureNames) {
-		ArrayList<Double> newFeats = new ArrayList<Double>();
-		for(String newName : featureNames)
-			if(names.contains(newName)) 
-				newFeats.add(features.get(names.indexOf(newName)));
-			else
-				newFeats.add(0.0);
-		this.setFeatures(newFeats);
-		this.setNames(new ArrayList<String>(featureNames));
+	public void spoil(TreeSet<String> featureNames) {
+		
+		// remove futile features
+		TreeSet<String> toRemove = new TreeSet<String>();
+		for(String name : features.keySet())
+			if(!featureNames.contains(name))
+				toRemove.add(name);
+		for(String name : toRemove)
+			features.remove(name);
+		
+		// put zeroes for absent properties
+		for(String name : featureNames)
+			if(!features.containsKey(name))
+				features.put(name, 0.0);
+		
 	}
 	
 }
