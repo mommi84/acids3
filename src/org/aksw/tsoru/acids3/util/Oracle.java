@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.util;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Set;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -35,6 +36,14 @@ public class Oracle  {
 	
 	public String get(String uri) {
 		return map.get(uri);
+	}
+	
+	public int getSize() {
+		return map.size();
+	}
+	
+	public Set<String> keySet() {
+		return map.keySet();
 	}
 
 }

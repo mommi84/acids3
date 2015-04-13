@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.evaluation.Evaluation;
 import org.aksw.tsoru.acids3.evaluation.PseudoEvaluation;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
-import org.aksw.tsoru.acids3.learner.SeqMinOptSVM;
+import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
 import org.aksw.tsoru.acids3.math.PointPlaneDistance;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -56,7 +57,7 @@ public class Algorithm implements Runnable {
 		tgtPro.index();
 		
 		// classifier
-		SeqMinOptSVM svm = new SeqMinOptSVM();
+		SMOSVMClassifier svm = new SMOSVMClassifier();
 		
 		// feature names
 		TreeSet<String> featureNames = new TreeSet<String>();
@@ -94,7 +95,8 @@ public class Algorithm implements Runnable {
 						+ " | d = " + PointPlaneDistance.compute(ex, svm.getWeights(), svm.getBias())
 						+ " | c(x) = " + svm.classify(ex));
 			
-			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
+//			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
+			Evaluation.recall(svm, oracle, srcPro, tgtPro, featureNames);
 		}
 		
 		srcPro.close();

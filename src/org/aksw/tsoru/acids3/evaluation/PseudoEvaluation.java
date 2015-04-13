@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.io.Processing;
-import org.aksw.tsoru.acids3.learner.SeqMinOptSVM;
+import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.similarity.OverallSimilarity;
@@ -23,7 +23,7 @@ public class PseudoEvaluation {
 	
 	private static final int TEST_SET_SIZE = 27000;
 
-	public static void run(SeqMinOptSVM svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
+	public static void run(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
 		
 		ArrayList<String> src = new ArrayList<String>(srcPro.getIndex());
 		ArrayList<String> tgt = new ArrayList<String>(tgtPro.getIndex());
@@ -78,7 +78,9 @@ public class PseudoEvaluation {
 		
 		
 	}
-
+	
+	
+	
 }
 
 /*

@@ -15,9 +15,9 @@ import weka.core.Instances;
  * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
  *
  */
-public class SeqMinOptSVM {
+public class SMOSVMClassifier {
 
-	private static final Logger LOGGER = Logger.getLogger(SeqMinOptSVM.class);
+	private static final Logger LOGGER = Logger.getLogger(SMOSVMClassifier.class);
 
 	private Instances train, test;
 	private Attribute classAttribute;
@@ -32,7 +32,7 @@ public class SeqMinOptSVM {
 
 	private SMO cModel;
 
-	public SeqMinOptSVM() {
+	public SMOSVMClassifier() {
 		super();
 	}
 
