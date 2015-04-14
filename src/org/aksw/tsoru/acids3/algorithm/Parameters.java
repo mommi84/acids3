@@ -12,11 +12,14 @@ public class Parameters {
 	private static final Logger LOGGER = Logger.getLogger(Parameters.class);
 
 	/**
+	 * Paths.
+	 */
+	private String sourcePath, targetPath, oraclePath;
+	
+	/**
 	 * Number of queries to the oracle per round.
 	 */
-	public static final int QUERIES_PER_ROUND = 0;
-
-	private String sourcePath, targetPath, oraclePath;
+	public static final int QUERIES_PER_ROUND = 1;
 
 	/**
 	 * Number of rounds for the active learning setting.

@@ -56,6 +56,12 @@ public class OverallSimilarity {
 							tgt2.addInverseTuple(t);
 					}
 					Double sim = this.compute(ex2, filter);
+					// if some property values of a resource didn't make the cut
+					if(sim == null) {
+						if(ex.isParent())
+							LOGGER.debug(" ---> didn't make the cut (URI)");
+						return null;
+					}
 					LOGGER.debug("all("+ts.getO()+","+tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("all("+ts.getP()+","+tt.getP()+")");
@@ -68,12 +74,13 @@ public class OverallSimilarity {
 					} catch (NumberFormatException e) {
 						// string similarity
 						if(filter != null) {
-							double threshold = 0.6;
+							double threshold = 0.3;
 							if(ex.isParent())
 								LOGGER.debug(ts.getO()+", "+tt.getO()+", "+threshold);
-							if(!filter.filter(ts.getO(), tt.getO(), threshold)) { // didn't make the cut
+							if(!filter.filter(ts.getO(), tt.getO(), threshold)) {
 								if(ex.isParent())
 									LOGGER.debug(" ---> didn't make the cut");
+								// XXX check this one
 								return null;
 							}
 						}

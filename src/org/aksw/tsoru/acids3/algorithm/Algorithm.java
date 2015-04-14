@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
+import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
@@ -67,10 +68,15 @@ public class Algorithm implements Runnable {
 			ArrayList<Example> training = new ArrayList<Example>();
 			
 			for(int j=0; j<Parameters.QUERIES_PER_ROUND; j++) {
+				
 				// get (pseudo-)random source example
 				Instance src = (Instance) srcPro.randomPick();
 				src.setProcessing(srcPro);
 				
+				/*
+				 *  TODO implement heuristic for 'new ReededFilter()'
+				 *  (see OverallSimilarity:83)
+				 */
 				ArrayList<Example> topM = tgtPro.topMatches(src, null);
 				for(Example ex : topM) {
 					String s = ex.getSource().getURI();
@@ -91,6 +97,11 @@ public class Algorithm implements Runnable {
 			
 			for(Example ex : training)
 				ex.spoil(trainFeatures);
+			
+			if(training.isEmpty()) {
+				LOGGER.fatal("No example made the cut. Try decreasing the filter thresholds.");
+				break;
+			}
 			
 			svm.init(training.get(0), training.size());
 			
