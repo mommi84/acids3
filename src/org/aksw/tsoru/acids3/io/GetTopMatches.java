@@ -13,7 +13,7 @@ import org.aksw.tsoru.acids3.similarity.OverallSimilarity;
 import org.apache.log4j.Logger;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class GetTopMatches {

@@ -26,7 +26,7 @@ import com.hp.hpl.jena.tdb.TDBFactory;
  * 
  * WARNING: Experimental.
  * 
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class TDBManager {

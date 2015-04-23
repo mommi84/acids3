@@ -10,7 +10,7 @@ import org.aksw.tsoru.acids3.similarity.WEDSimilarity;
  * Axel-Cyrille Ngonga Ngomo, "Rapid execution of weighted edit distances." 
  * In OM, pp. 1-12. 2013.
  * 
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class ReededFilter {

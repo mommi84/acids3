@@ -12,7 +12,7 @@ import weka.core.DenseInstance;
 import weka.core.Instances;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class SMOSVMClassifier {

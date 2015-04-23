@@ -14,7 +14,7 @@ import com.hp.hpl.jena.sparql.core.Quad;
 /**
  * TODO Base this on SQLite.
  * 
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class CBDBuilder {

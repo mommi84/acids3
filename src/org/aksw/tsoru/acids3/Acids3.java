@@ -5,7 +5,7 @@ import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.apache.log4j.Logger;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class Acids3 implements Runnable {

@@ -10,7 +10,7 @@ import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.log4j.Logger;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class OverallSimilarity {
@@ -58,11 +58,11 @@ public class OverallSimilarity {
 					Double sim = this.compute(ex2, filter);
 					// if some property values of a resource didn't make the cut
 					if(sim == null) {
-						if(ex.isParent())
-							LOGGER.debug(" ---> didn't make the cut (URI)");
+//						if(ex.isParent())
+//							LOGGER.debug(" ---> didn't make the cut (URI)");
 						return null;
 					}
-					LOGGER.debug("all("+ts.getO()+","+tt.getO()+") = "+sim);
+//					LOGGER.debug("all("+ts.getO()+","+tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("all("+ts.getP()+","+tt.getP()+")");
 
@@ -75,19 +75,19 @@ public class OverallSimilarity {
 						// string similarity
 						if(filter != null) {
 							double threshold = 0.3;
-							if(ex.isParent())
-								LOGGER.debug(ts.getO()+", "+tt.getO()+", "+threshold);
+//							if(ex.isParent())
+//								LOGGER.debug(ts.getO()+", "+tt.getO()+", "+threshold);
 							if(!filter.filter(ts.getO(), tt.getO(), threshold)) {
-								if(ex.isParent())
-									LOGGER.debug(" ---> didn't make the cut");
+//								if(ex.isParent())
+//									LOGGER.debug(" ---> didn't make the cut");
 								// XXX check this one
 								return null;
 							}
 						}
 						// actual similarity computation
 						Double sim = wed.compute(ts.getO(), tt.getO());
-						if(ex.isParent())
-							LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
+//						if(ex.isParent())
+//							LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
 						features.add(sim);
 						featureNames.add("wed("+ts.getP() +"," + tt.getP()+")");
 						continue;
@@ -103,14 +103,14 @@ public class OverallSimilarity {
 					logsim.setMinMin(minMin);
 					logsim.setDenomArg(denomArg);
 					Double sim = logsim.compute(ts.getO(), tt.getO());
-					if(ex.isParent())
-						LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
+//					if(ex.isParent())
+//						LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("lgs("+ts.getP() +"," + tt.getP()+")");
 				} else {
 					// TODO The one is URI, the other is not.
-					if(ex.isParent())
-						LOGGER.debug("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
+//					if(ex.isParent())
+//						LOGGER.debug("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
 					features.add(0.0);
 					featureNames.add("zero("+ts.getP() +"," + tt.getP()+")");
 				}
@@ -121,7 +121,7 @@ public class OverallSimilarity {
 		double[] feat = new double[features.size()];
 		for(int i=0; i<feat.length; i++) {
 			feat[i] = features.get(i);
-			LOGGER.debug(feat[i]);
+//			LOGGER.debug(feat[i]);
 		}
 		
 		for(int i=0; i<featureNames.size(); i++)

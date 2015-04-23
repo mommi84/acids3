@@ -6,7 +6,6 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
-import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
@@ -17,7 +16,7 @@ import org.aksw.tsoru.acids3.util.Oracle;
 import org.apache.log4j.Logger;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class Algorithm implements Runnable {

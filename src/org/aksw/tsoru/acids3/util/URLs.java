@@ -1,7 +1,7 @@
 package org.aksw.tsoru.acids3.util;
 
 /**
- * @author Tommaso Soru <t.soru@informatik.uni-leipzig.de>
+ * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class URLs {
