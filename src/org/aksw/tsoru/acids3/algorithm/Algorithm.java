@@ -70,13 +70,10 @@ public class Algorithm implements Runnable {
 			for(int j=0; j<Parameters.QUERIES_PER_ROUND; j++) {
 				
 				// get (pseudo-)random source example
-				Instance src = (Instance) srcPro.randomPick();
+				Instance src = srcPro.randomPick();
+				LOGGER.info("Source CBD size = "+src.getTuples().size());
 				src.setProcessing(srcPro);
 				
-				/*
-				 *  TODO implement heuristic for 'new ReededFilter()'
-				 *  (see OverallSimilarity:83)
-				 */
 				ArrayList<Example> topM = tgtPro.topMatches(src, new ReededFilter());
 				for(Example ex : topM) {
 					String s = ex.getSource().getURI();

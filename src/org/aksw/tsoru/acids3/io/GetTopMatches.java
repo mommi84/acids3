@@ -34,20 +34,20 @@ public class GetTopMatches {
 			
 			LOGGER.debug("Trying with <"+uri+">...");
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
-			Instance inst = new Instance(uri);
-			inst.setProcessing(p);
+			Instance tgt = new Instance(uri);
+			tgt.setProcessing(p);
 			
 			for(Tuple t : cbd) {
 				if(t.getS().equals(uri))
-					inst.addTuple(t);
+					tgt.addTuple(t);
 				else
-					inst.addInverseTuple(t);
+					tgt.addInverseTuple(t);
 			}
 			
-			LOGGER.debug("CBD size = "+inst.getTuples().size());
+			LOGGER.debug("Target CBD size = "+tgt.getTuples().size());
 			
 			// similarity call
-			Example ex = new Example(src, inst);
+			Example ex = new Example(src, tgt);
 			Double sim = osim.compute(ex, filter);
 			if(sim != null) { // example made the cut
 				ex.setSim(sim);

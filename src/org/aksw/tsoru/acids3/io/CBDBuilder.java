@@ -70,7 +70,6 @@ public class CBDBuilder {
 		
 		RDFDataMgr.parse(dest, base + param.getSourcePath());
 		
-		LOGGER.info("Instance CBD size = "+instance.getTuples().size());
 		return instance;
 		
 	}

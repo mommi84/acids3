@@ -87,10 +87,7 @@ public class OverallSimilarity {
 									LOGGER.trace("Similarity didn't make the cut (parent)");
 								else
 									LOGGER.trace("Similarity didn't make the cut");
-								/*
-								 * TODO We cannot apply hypercube filtering on all measures! Statistical analysis of objects?
-								 */
-								LOGGER.debug(ts.getO()+", "+tt.getO()+" are too distant.");
+								LOGGER.debug(filter.getClass().getSimpleName()+" discarded ("+ts.getS()+", "+tt.getS()+")");
 								return null;
 							}
 						}

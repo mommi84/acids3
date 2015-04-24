@@ -56,12 +56,12 @@ public class Indexer {
 					Double d = null;
 					try {
 						d = Double.parseDouble("" + triple.getObject().getLiteral().getValue());
-					} catch (NumberFormatException e) {
+					} catch (NumberFormatException | UnsupportedOperationException e) {
+						// not numerical or blank node => next triple
 						return;
 					}
-					if(!cache.containsKey(p)) {
+					if(!cache.containsKey(p))
 						cache.put(p, new Cache());
-					}
 					if(d > cache.get(p).max)
 						cache.get(p).max = d;
 					if(d < cache.get(p).min)
