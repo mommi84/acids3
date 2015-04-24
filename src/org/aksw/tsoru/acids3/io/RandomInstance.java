@@ -26,7 +26,13 @@ public class RandomInstance {
 	 */
 //	private static final long SEED = 123;
 	
+	protected RandomInstance() {
+		super();
+	}
+	
 	protected static Instance get(Processing p) {
+		
+		System.out.println(p.getParam().getPath(p.getArg()));
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
@@ -77,7 +83,7 @@ public class RandomInstance {
 		};
 		
 		cache.iReset();
-		RDFDataMgr.parse(dest, base + param.getSourcePath());
+		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
 		LOGGER.info("Instance URI = "+cache.instance.getURI());
 		return cache.instance;

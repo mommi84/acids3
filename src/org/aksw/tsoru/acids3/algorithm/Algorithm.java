@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
+import org.aksw.tsoru.acids3.filters.FilterBuilder;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
@@ -54,6 +55,9 @@ public class Algorithm implements Runnable {
 		
 		srcPro.index();
 		tgtPro.index();
+		
+		// build filters
+		new FilterBuilder(srcPro, tgtPro).build();
 		
 		// classifier
 		SMOSVMClassifier svm = new SMOSVMClassifier();

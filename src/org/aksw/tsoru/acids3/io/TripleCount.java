@@ -58,7 +58,7 @@ public class TripleCount {
 			
 		};
 		
-		RDFDataMgr.parse(dest, base + param.getSourcePath());
+		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
 		cache.saveCount();
 		LOGGER.info("# of triples ("+arg.getName()+") = " + cache.nTriples);

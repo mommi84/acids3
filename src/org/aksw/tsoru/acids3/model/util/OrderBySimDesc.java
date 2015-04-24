@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.io;
+package org.aksw.tsoru.acids3.model.util;
 
 import java.util.Comparator;
 

@@ -68,7 +68,7 @@ public class CBDBuilder {
 			
 		};
 		
-		RDFDataMgr.parse(dest, base + param.getSourcePath());
+		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
 		return instance;
 		

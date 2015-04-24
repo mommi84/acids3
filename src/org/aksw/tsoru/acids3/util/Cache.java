@@ -14,8 +14,8 @@ public class Cache {
 	public Instance instance = null;
 	
 	// default values
-	public Double max = Double.MIN_VALUE;
-	public Double min = Double.MAX_VALUE;
+	public Double max = Double.NEGATIVE_INFINITY;
+	public Double min = Double.POSITIVE_INFINITY;
 	
 	public Cache() {
 		super();
