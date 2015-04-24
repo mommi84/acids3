@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
+import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
@@ -76,7 +77,7 @@ public class Algorithm implements Runnable {
 				 *  TODO implement heuristic for 'new ReededFilter()'
 				 *  (see OverallSimilarity:83)
 				 */
-				ArrayList<Example> topM = tgtPro.topMatches(src, null);
+				ArrayList<Example> topM = tgtPro.topMatches(src, new ReededFilter());
 				for(Example ex : topM) {
 					String s = ex.getSource().getURI();
 					String t = ex.getTarget().getURI();

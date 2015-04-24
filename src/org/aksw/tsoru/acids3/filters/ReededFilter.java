@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.aksw.tsoru.acids3.similarity.WEDSimilarity;
+import org.aksw.tsoru.acids3.util.Transform;
+import org.apache.log4j.Logger;
 
 /**
  * REEDED string similarity join filtering, as described in Tommaso Soru and
@@ -14,6 +16,8 @@ import org.aksw.tsoru.acids3.similarity.WEDSimilarity;
  *
  */
 public class ReededFilter {
+
+	private static final Logger LOGGER = Logger.getLogger(ReededFilter.class);
 
 	private static HashMap<String, Vector<Character>> index = new HashMap<String, Vector<Character>>();
 	
@@ -26,12 +30,14 @@ public class ReededFilter {
 	 * 
 	 * @param sp source string
 	 * @param tp target string
-	 * @param theta threshold
+	 * @param theta similarity threshold
 	 * @return whether the similarity join passes the filtering
 	 */
 	public boolean filter(String sp, String tp, double theta) {
 
-		double tau = theta / WEDSimilarity.getMinWeight();
+		double tau = Transform.toDistance(theta) / WEDSimilarity.getMinWeight();
+		
+		LOGGER.trace("Threshold for weighted edit distance is "+tau);
 
 		Vector<Character> cs, ct;
 		

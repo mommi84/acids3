@@ -6,6 +6,7 @@ import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.util.Transform;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.log4j.Logger;
 
@@ -23,6 +24,9 @@ public class OverallSimilarity {
 	
 	public Double compute(Example ex, final ReededFilter filter) {
 		
+		double threshold = 0.2;
+		LOGGER.debug("thr_edit = "+Transform.toDistance(threshold));
+
 		Instance src = ex.getSource();
 		Instance tgt = ex.getTarget();
 		
@@ -56,13 +60,15 @@ public class OverallSimilarity {
 							tgt2.addInverseTuple(t);
 					}
 					Double sim = this.compute(ex2, filter);
+					LOGGER.trace("all("+ts.getO()+","+tt.getO()+") = "+sim);
 					// if some property values of a resource didn't make the cut
 					if(sim == null) {
-//						if(ex.isParent())
-//							LOGGER.debug(" ---> didn't make the cut (URI)");
+						if(ex.isParent())
+							LOGGER.trace("Similarity didn't make the cut (parent)");
+						else
+							LOGGER.trace("Similarity didn't make the cut");
 						return null;
 					}
-//					LOGGER.debug("all("+ts.getO()+","+tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("all("+ts.getP()+","+tt.getP()+")");
 
@@ -74,20 +80,24 @@ public class OverallSimilarity {
 					} catch (NumberFormatException e) {
 						// string similarity
 						if(filter != null) {
-							double threshold = 0.3;
-//							if(ex.isParent())
-//								LOGGER.debug(ts.getO()+", "+tt.getO()+", "+threshold);
+							if(ex.isParent())
+								LOGGER.trace(ts.getO()+", "+tt.getO()+", "+threshold);
 							if(!filter.filter(ts.getO(), tt.getO(), threshold)) {
-//								if(ex.isParent())
-//									LOGGER.debug(" ---> didn't make the cut");
-								// XXX check this one
+								if(ex.isParent())
+									LOGGER.trace("Similarity didn't make the cut (parent)");
+								else
+									LOGGER.trace("Similarity didn't make the cut");
+								/*
+								 * TODO We cannot apply hypercube filtering on all measures! Statistical analysis of objects?
+								 */
+								LOGGER.debug(ts.getO()+", "+tt.getO()+" are too distant.");
 								return null;
 							}
 						}
 						// actual similarity computation
 						Double sim = wed.compute(ts.getO(), tt.getO());
-//						if(ex.isParent())
-//							LOGGER.debug("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
+						if(ex.isParent())
+							LOGGER.trace("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
 						features.add(sim);
 						featureNames.add("wed("+ts.getP() +"," + tt.getP()+")");
 						continue;
@@ -103,14 +113,14 @@ public class OverallSimilarity {
 					logsim.setMinMin(minMin);
 					logsim.setDenomArg(denomArg);
 					Double sim = logsim.compute(ts.getO(), tt.getO());
-//					if(ex.isParent())
-//						LOGGER.debug("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
+					if(ex.isParent())
+						LOGGER.trace("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
 					features.add(sim);
 					featureNames.add("lgs("+ts.getP() +"," + tt.getP()+")");
 				} else {
 					// TODO The one is URI, the other is not.
-//					if(ex.isParent())
-//						LOGGER.debug("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
+					if(ex.isParent())
+						LOGGER.trace("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
 					features.add(0.0);
 					featureNames.add("zero("+ts.getP() +"," + tt.getP()+")");
 				}
@@ -121,7 +131,7 @@ public class OverallSimilarity {
 		double[] feat = new double[features.size()];
 		for(int i=0; i<feat.length; i++) {
 			feat[i] = features.get(i);
-//			LOGGER.debug(feat[i]);
+			LOGGER.trace("Feature ["+i+"] = "+feat[i]);
 		}
 		
 		for(int i=0; i<featureNames.size(); i++)
