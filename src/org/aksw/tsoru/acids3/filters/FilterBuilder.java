@@ -32,11 +32,12 @@ public class FilterBuilder {
 		this.tgtPro = tgtPro;
 	}
 
-	public void build() {
-		LOGGER.info("Building filters...");
+	public ArrayList<AllowedFilter> build() {
+		
+		LOGGER.info("Building filters using "+RANDOM_SAMPLES+" random samples...");
 		
 		OverallSimilarity osim = new OverallSimilarity();
-		HashMap<String, Rank> ranks = new HashMap<String, Rank>();
+		HashMap<String, AllowedFilter> ranks = new HashMap<String, AllowedFilter>();
 		
 		for(int i=0; i<RANDOM_SAMPLES; i++) {
 		
@@ -51,13 +52,13 @@ public class FilterBuilder {
 				for(Tuple tt : tgt.getTuples()) {
 					String measure = ts.getP()+", "+tt.getP();
 					Double sim = osim.tupleCompute(ts, tt, srcPro.getLogsim(ts.getP()), tgtPro.getLogsim(tt.getP()), ex);
-					LOGGER.debug("Value for sim("+measure+") is "+sim);
+					LOGGER.trace("Value for sim("+measure+") is "+sim);
 					if(sim != null) {
-						Rank rank;
+						AllowedFilter rank;
 						if(ranks.containsKey(measure))
 							rank = ranks.get(measure);
 						else {
-							rank = new Rank(measure);
+							rank = new AllowedFilter(measure);
 							ranks.put(measure, rank);
 						}
 						rank.add(sim);
@@ -66,53 +67,29 @@ public class FilterBuilder {
 			}
 		}
 		
-		ArrayList<Rank> rankList = new ArrayList<Rank>(ranks.values());
-		System.out.println(rankList);
+		ArrayList<AllowedFilter> rankList = new ArrayList<AllowedFilter>(ranks.values());
+		LOGGER.debug("Filter list: "+rankList);
 		
 		// allowed filter size
-		int afsize = (int) (Math.ceil(Math.sqrt(ranks.size())));
-		Collections.sort(rankList, new Comparator<Rank>() {
+		final int AF_SIZE = (int) (Math.ceil(Math.sqrt(Math.sqrt(ranks.size()))));
+		
+		// sort and cut away low-ranked measures
+		Collections.sort(rankList, new Comparator<AllowedFilter>() {
 			@Override
-			public int compare(Rank o1, Rank o2) {
+			public int compare(AllowedFilter o1, AllowedFilter o2) {
 				return o2.getMean().compareTo(o1.getMean());
 			}
 		});
-		Iterator<Rank> it = rankList.iterator();
+		Iterator<AllowedFilter> it = rankList.iterator();
 		for(int i=0; it.hasNext(); i++) {
 			it.next();
-			if(i>=afsize)
+			if(i>=AF_SIZE)
 				it.remove();
 		}
-		System.out.println(rankList);
-		System.exit(0);
+		LOGGER.debug("Allowed filter list (size="+AF_SIZE+" random samples: "+rankList);
+		LOGGER.info("Filters done.");
+		
+		return rankList; 
 	}
 
-}
-
-class Rank {
-	
-	private String measure;
-	private double sum;
-	private int occur;
-	
-	Rank(String measure) {
-		this.measure = measure;
-	}
-	
-	public Double getMean() {
-		return sum / occur;
-	}
-	public void add(double x) {
-		this.sum += x;
-		this.occur++;
-	}
-	public String getMeasure() {
-		return measure;
-	}
-	
-	@Override
-	public String toString() {
-		return getMeasure() + " => " + getMean();
-	}
-	
 }
