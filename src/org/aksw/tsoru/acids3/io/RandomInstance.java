@@ -1,5 +1,6 @@
 package org.aksw.tsoru.acids3.io;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
@@ -30,17 +31,23 @@ public class RandomInstance {
 		super();
 	}
 	
-	protected static Instance get(Processing p) {
-		
-		System.out.println(p.getParam().getPath(p.getArg()));
+	protected static ArrayList<Instance> get(Processing p, final int N) {
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 
-		cache.pick = (int) (cache.nTriples * new Random().nextDouble());
-		LOGGER.debug("Random source index = "+cache.pick);
+		// extract `N` different random numbers
+		for(int i=0; i<N; i++) {
+			int n;
+			do {
+				n = (int) (cache.nTriples * new Random().nextDouble());
+			} while(cache.pick.contains(n));
+			cache.pick.add(n);
+		}
+		
+		LOGGER.debug("Random source indices = "+cache.pick);
 
 		// TODO use reservoir sampling to traverse the files only once
 		
@@ -55,8 +62,8 @@ public class RandomInstance {
 				
 				cache.i++;
 				
-				if(cache.pick != null && cache.i == cache.pick) {
-					cache.instance = new Instance(triple.getSubject().getURI());
+				if(cache.pick != null && cache.pick.contains(cache.i)) {
+					cache.instances.add(new Instance(triple.getSubject().getURI()));
 					// TODO may halt to save runtime
 				}
 			}
@@ -85,8 +92,10 @@ public class RandomInstance {
 		cache.iReset();
 		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
-		LOGGER.info("Instance URI = "+cache.instance.getURI());
-		return cache.instance;
+		for(Instance inst : cache.instances)
+			LOGGER.trace("Instance URI = "+inst.getURI());
+		
+		return cache.instances;
 		
 	}
 

@@ -1,5 +1,8 @@
 package org.aksw.tsoru.acids3.io;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.util.Cache;
@@ -21,17 +24,22 @@ public class CBDBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	protected static Instance build(Processing p, Instance inst) {
+	protected static void build(Processing p, final ArrayList<Instance> instance) {
 		
-		final Instance instance = inst;
+		
+		final HashMap<String, Instance> uriToInstance = new HashMap<String, Instance>();
+		for(Instance in : instance)
+			uriToInstance.put(in.getURI(), in);
 		
 		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 		
-		final String uri = cache.instance.getURI();
-
+		final ArrayList<String> uris = new ArrayList<String>();
+		for(Instance in : cache.instances)
+			uris.add(in.getURI());
+		
 		StreamRDF dest = new StreamRDF() {
 			
 			@Override
@@ -41,10 +49,12 @@ public class CBDBuilder {
 				if(p.equals(URLs.RDF_TYPE))
 					return;
 				
-				if(uri.equals(triple.getSubject().getURI()))
-					instance.addTriple(triple);
-				if(uri.equals(triple.getObject().toString()))
-					instance.addInverseTriple(triple);
+				String subjURI = triple.getSubject().getURI();
+				if(uris.contains(subjURI))
+					uriToInstance.get(subjURI).addTriple(triple);
+				String objURI = triple.getObject().toString();
+				if(uris.contains(objURI))
+					uriToInstance.get(objURI).addInverseTriple(triple);
 			}
 			
 			@Override
@@ -70,7 +80,6 @@ public class CBDBuilder {
 		
 		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
-		return instance;
 		
 	}
 

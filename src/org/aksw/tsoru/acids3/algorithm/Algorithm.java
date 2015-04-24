@@ -74,6 +74,8 @@ public class Algorithm implements Runnable {
 				
 				// get (pseudo-)random source example
 				Instance src = srcPro.randomPick();
+				LOGGER.info("Instance URI = "+src.getURI());
+				srcPro.getCache().resetInstances();
 				LOGGER.info("Source CBD size = "+src.getTuples().size());
 				src.setProcessing(srcPro);
 				

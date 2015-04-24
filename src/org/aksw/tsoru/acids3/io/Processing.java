@@ -70,13 +70,17 @@ public class Processing {
 		return TripleCount.count(this);
 	}
 	
-	public Instance randomPick() {
+	public ArrayList<Instance> randomPick(final int N) {
 		// random pick requires count
 		if(cache.nTriples == null)
 			this.count();
-		Instance e = RandomInstance.get(this);
-		CBDBuilder.build(this, e);
-		return e;
+		ArrayList<Instance> instances = RandomInstance.get(this, N);
+		CBDBuilder.build(this, instances);
+		return instances;
+	}
+	
+	public Instance randomPick() {
+		return randomPick(1).get(0);
 	}
 
 	public void index() {

@@ -1,5 +1,7 @@
 package org.aksw.tsoru.acids3.util;
 
+import java.util.ArrayList;
+
 import org.aksw.tsoru.acids3.model.Instance;
 
 /**
@@ -10,8 +12,8 @@ public class Cache {
 
 	public int i = 0;
 	public Integer nTriples = null;
-	public Integer pick = null;
-	public Instance instance = null;
+	public ArrayList<Integer> pick = null;
+	public ArrayList<Instance> instances = null;
 	
 	// default values
 	public Double max = Double.NEGATIVE_INFINITY;
@@ -19,6 +21,8 @@ public class Cache {
 	
 	public Cache() {
 		super();
+		pick = new ArrayList<Integer>();
+		instances = new ArrayList<Instance>();
 	}
 
 	public void saveCount() {
@@ -28,6 +32,11 @@ public class Cache {
 
 	public void iReset() {
 		i = 0;
+	}
+	
+	public void resetInstances() {
+		pick.clear();
+		instances.clear();
 	}
 
 }
