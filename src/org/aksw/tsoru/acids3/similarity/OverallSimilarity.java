@@ -1,6 +1,7 @@
 package org.aksw.tsoru.acids3.similarity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
@@ -27,11 +28,11 @@ public class OverallSimilarity {
 	public Double compute(Example ex, final ArrayList<AllowedFilter> allowedFilters) {
 		
 		// collect measures which allow the filtering
-		TreeSet<String> afMeasures = new TreeSet<String>();
+		HashMap<String, AllowedFilter> afMeasures = new HashMap<String, AllowedFilter>();
 		for(AllowedFilter af : allowedFilters)
-			afMeasures.add(af.getMeasure());
+			afMeasures.put(af.getMeasure(), af);
 		
-		double threshold = 0.2;
+		double threshold = 0.5;
 //		LOGGER.debug("thr_edit = "+Transform.toDistance(threshold));
 
 		Instance src = ex.getSource();
@@ -40,6 +41,30 @@ public class OverallSimilarity {
 		
 		ArrayList<Double> features = new ArrayList<Double>();
 		ArrayList<String> featureNames = new ArrayList<String>();
+		
+		// first check allowed filters
+		ReededFilter rf = new ReededFilter();
+		for(Tuple ts : src.getTuples()) {
+			for(Tuple tt : tgt.getTuples()) {
+				String measure = "["+ts.getP()+", "+tt.getP()+"]";
+				if(afMeasures.keySet().contains(measure)) {
+					LOGGER.debug(measure + " was found among allowed filters.");
+					if(!afMeasures.get(measure).isNumeric()) {
+						// if compares strings...
+						boolean pass = rf.filter(ts.getO(), tt.getO(), threshold);
+						LOGGER.debug("Oh Filter, are '"+ts.getO()+"' and '"+tt.getO()+"' above thr="+threshold+"? "+pass);
+						if(!pass)
+							return null;
+					} else {
+						// TODO if compares doubles...
+						/*
+						 * TODO extend allowed filter list (no string filtering here!)
+						 */
+					}
+				}
+			}
+		}
+		
 		
 		for(Tuple ts : src.getTuples()) {
 			
@@ -139,9 +164,9 @@ public class OverallSimilarity {
 		return mean.evaluate(feat);
 	}
 
-	public Double tupleCompute(Tuple ts, Tuple tt, LogarithmicSimilarity srcLogsim, LogarithmicSimilarity tgtLogsim, Example ex) {
+	public Double tupleCompute(Tuple ts, Tuple tt, LogarithmicSimilarity srcLogsim, LogarithmicSimilarity tgtLogsim, Example ex, AllowedFilter rank) {
 
-		Double sim = 0.0;
+		Double sim = null;
 		
 		if(ts.getOtype().equals("URI") && tt.getOtype().equals("URI") && ex.isParent()) {
 			
@@ -167,7 +192,7 @@ public class OverallSimilarity {
 			ArrayList<Double> features = new ArrayList<Double>();
 			for(Tuple ts2 : src2.getTuples())
 				for(Tuple tt2 : tgt2.getTuples())
-					features.add(this.tupleCompute(ts2, tt2, src2.getProcessing().getLogsim(ts2.getP()), tgt2.getProcessing().getLogsim(tt2.getP()), ex2));
+					features.add(this.tupleCompute(ts2, tt2, src2.getProcessing().getLogsim(ts2.getP()), tgt2.getProcessing().getLogsim(tt2.getP()), ex2, null));
 			
 			Mean mean = new Mean();
 			double[] feat = new double[features.size()];
@@ -179,10 +204,6 @@ public class OverallSimilarity {
 			sim = mean.evaluate(feat);
 			
 			LOGGER.trace("all("+ts.getO()+","+tt.getO()+") = "+sim);
-			// if some property values of a resource didn't make the cut
-//			if(sim != null) {
-//				featureNames.add("all("+ts.getP()+","+tt.getP()+")");
-//			}
 			
 		} else if(!ts.getOtype().equals("URI") && !tt.getOtype().equals("URI")) {
 			boolean isNumeric = true;
@@ -202,25 +223,22 @@ public class OverallSimilarity {
 				logsim.setMinMin(Math.min(srcLogsim.getMinMin(), tgtLogsim.getMinMin()));
 				logsim.setDenomArg(Math.max(srcLogsim.getDenomArg(), tgtLogsim.getDenomArg()));
 				sim = logsim.compute(ts.getO(), tt.getO());
-				if(ex.isParent())
+				if(ex.isParent()) {
 					LOGGER.trace("lgs("+ts.getO() +"," + tt.getO()+") = "+sim);
-	//			featureNames.add("lgs("+ts.getP() +"," + tt.getP()+")");
+					rank.setNumeric(true);
+				}
 			} else {
 				// string similarity
 				sim = wed.compute(ts.getO(), tt.getO());
 				if(ex.isParent())
 					LOGGER.trace("wed("+ts.getO() +"," + tt.getO()+") = "+sim);
-//				featureNames.add("wed("+ts.getP() +"," + tt.getP()+")");
 			}
 		} else {
 			// TODO The one is URI, the other is not.
 			if(ex.isParent())
 				LOGGER.trace("zero("+ts.getO() +"," + tt.getO()+") = 0.0");
-//			featureNames.add("zero("+ts.getP() +"," + tt.getP()+")");
+			sim = 0.0;
 		}
-		
-//		for(int i=0; i<featureNames.size(); i++)
-//			ex.setFeature(featureNames.get(i), features.get(i));
 		
 		return sim;
 	}

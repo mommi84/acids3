@@ -54,18 +54,16 @@ public class FilterBuilder {
 			for(Tuple ts : src.getTuples()) {
 				for(Tuple tt : tgt.getTuples()) {
 					String measure = "["+ts.getP()+", "+tt.getP()+"]";
-					Double sim = osim.tupleCompute(ts, tt, srcPro.getLogsim(ts.getP()), tgtPro.getLogsim(tt.getP()), ex);
-					LOGGER.trace("Value for sim("+measure+") is "+sim);
-					if(sim != null) {
-						AllowedFilter rank;
-						if(ranks.containsKey(measure))
-							rank = ranks.get(measure);
-						else {
-							rank = new AllowedFilter(measure);
-							ranks.put(measure, rank);
-						}
-						rank.add(sim);
+					AllowedFilter rank;
+					if(ranks.containsKey(measure))
+						rank = ranks.get(measure);
+					else {
+						rank = new AllowedFilter(measure);
+						ranks.put(measure, rank);
 					}
+					Double sim = osim.tupleCompute(ts, tt, srcPro.getLogsim(ts.getP()), tgtPro.getLogsim(tt.getP()), ex, rank);
+					LOGGER.trace("Value for sim_"+measure+" is "+sim);
+					rank.add(sim);
 				}
 			}
 		}
