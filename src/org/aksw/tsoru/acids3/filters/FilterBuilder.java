@@ -53,7 +53,7 @@ public class FilterBuilder {
 			
 			for(Tuple ts : src.getTuples()) {
 				for(Tuple tt : tgt.getTuples()) {
-					String measure = ts.getP()+", "+tt.getP();
+					String measure = "["+ts.getP()+", "+tt.getP()+"]";
 					Double sim = osim.tupleCompute(ts, tt, srcPro.getLogsim(ts.getP()), tgtPro.getLogsim(tt.getP()), ex);
 					LOGGER.trace("Value for sim("+measure+") is "+sim);
 					if(sim != null) {

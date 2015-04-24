@@ -1,8 +1,10 @@
 package org.aksw.tsoru.acids3.similarity;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -22,7 +24,12 @@ public class OverallSimilarity {
 		super();
 	}
 	
-	public Double compute(Example ex, final ReededFilter filter) {
+	public Double compute(Example ex, final ArrayList<AllowedFilter> allowedFilters) {
+		
+		// collect measures which allow the filtering
+		TreeSet<String> afMeasures = new TreeSet<String>();
+		for(AllowedFilter af : allowedFilters)
+			afMeasures.add(af.getMeasure());
 		
 		double threshold = 0.2;
 //		LOGGER.debug("thr_edit = "+Transform.toDistance(threshold));
@@ -58,7 +65,7 @@ public class OverallSimilarity {
 						else
 							tgt2.addInverseTuple(t);
 					}
-					Double sim = this.compute(ex2, filter);
+					Double sim = this.compute(ex2, allowedFilters);
 					LOGGER.trace("all("+ts.getO()+","+tt.getO()+") = "+sim);
 					// if some property values of a resource didn't make the cut
 					if(sim == null) {
@@ -78,18 +85,18 @@ public class OverallSimilarity {
 						Double.parseDouble(tt.getO());
 					} catch (NumberFormatException e) {
 						// string similarity
-						if(filter != null) {
-							if(ex.isParent())
-								LOGGER.trace(ts.getO()+", "+tt.getO()+", "+threshold);
-							if(!filter.filter(ts.getO(), tt.getO(), threshold)) {
-								if(ex.isParent())
-									LOGGER.trace("Similarity didn't make the cut (parent)");
-								else
-									LOGGER.trace("Similarity didn't make the cut");
-								LOGGER.debug(filter.getClass().getSimpleName()+" discarded ("+ts.getS()+", "+tt.getS()+")");
-								return null;
-							}
-						}
+//						if(allowedFilters != null) {
+//							if(ex.isParent())
+//								LOGGER.trace(ts.getO()+", "+tt.getO()+", "+threshold);
+//							if(!allowedFilters.filter(ts.getO(), tt.getO(), threshold)) {
+//								if(ex.isParent())
+//									LOGGER.trace("Similarity didn't make the cut (parent)");
+//								else
+//									LOGGER.trace("Similarity didn't make the cut");
+//								LOGGER.debug(allowedFilters.getClass().getSimpleName()+" discarded ("+ts.getS()+", "+tt.getS()+")");
+//								return null;
+//							}
+//						}
 						// actual similarity computation
 						Double sim = wed.compute(ts.getO(), tt.getO());
 						if(ex.isParent())
@@ -156,7 +163,21 @@ public class OverallSimilarity {
 				else
 					tgt2.addInverseTuple(t);
 			}
-			sim = this.compute(ex2, null);
+			
+			ArrayList<Double> features = new ArrayList<Double>();
+			for(Tuple ts2 : src2.getTuples())
+				for(Tuple tt2 : tgt2.getTuples())
+					features.add(this.tupleCompute(ts2, tt2, src2.getProcessing().getLogsim(ts2.getP()), tgt2.getProcessing().getLogsim(tt2.getP()), ex2));
+			
+			Mean mean = new Mean();
+			double[] feat = new double[features.size()];
+			for(int i=0; i<feat.length; i++) {
+				feat[i] = features.get(i);
+				LOGGER.trace("Feature ["+i+"] = "+feat[i]);
+			}
+			
+			sim = mean.evaluate(feat);
+			
 			LOGGER.trace("all("+ts.getO()+","+tt.getO()+") = "+sim);
 			// if some property values of a resource didn't make the cut
 //			if(sim != null) {

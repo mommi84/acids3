@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -21,7 +22,7 @@ public class GetTopMatches {
 
 	private static final Logger LOGGER = Logger.getLogger(GetTopMatches.class);
 	
-	protected static ArrayList<Example> get(Processing p, Instance src, final ReededFilter filter) {
+	protected static ArrayList<Example> get(Processing p, Instance src, final ArrayList<AllowedFilter> allowedFilters) {
 	
 		LOGGER.info("Computing similarity matches for property alignment...");
 		
@@ -49,7 +50,7 @@ public class GetTopMatches {
 			
 			// similarity call
 			Example ex = new Example(src, tgt);
-			Double sim = osim.compute(ex, filter);
+			Double sim = osim.compute(ex, allowedFilters);
 			if(sim != null) { // example made the cut
 				ex.setSim(sim);
 				LOGGER.debug("sim = "+sim);
