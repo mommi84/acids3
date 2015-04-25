@@ -80,15 +80,15 @@ public class OverallSimilarity {
 					ex2.setParent(false);
 					for(Tuple t : src2.getProcessing().getSql().getTuples(ts.getO())) {
 						if(t.getS().equals(ts.getO()))
-							src2.addTuple(t);
+							src2.add(t);
 						else
-							src2.addInverseTuple(t);
+							src2.addInverse(t);
 					}
 					for(Tuple t : tgt2.getProcessing().getSql().getTuples(tt.getO())) {
 						if(t.getS().equals(tt.getO()))
-							tgt2.addTuple(t);
+							tgt2.add(t);
 						else
-							tgt2.addInverseTuple(t);
+							tgt2.addInverse(t);
 					}
 					Double sim = this.compute(ex2, allowedFilters);
 					LOGGER.trace("all("+ts.getO()+","+tt.getO()+") = "+sim);
@@ -178,15 +178,15 @@ public class OverallSimilarity {
 			ex2.setParent(false);
 			for(Tuple t : src2.getProcessing().getSql().getTuples(ts.getO())) {
 				if(t.getS().equals(ts.getO()))
-					src2.addTuple(t);
+					src2.add(t);
 				else
-					src2.addInverseTuple(t);
+					src2.addInverse(t);
 			}
 			for(Tuple t : tgt2.getProcessing().getSql().getTuples(tt.getO())) {
 				if(t.getS().equals(tt.getO()))
-					tgt2.addTuple(t);
+					tgt2.add(t);
 				else
-					tgt2.addInverseTuple(t);
+					tgt2.addInverse(t);
 			}
 			
 			ArrayList<Double> features = new ArrayList<Double>();
@@ -196,9 +196,12 @@ public class OverallSimilarity {
 			
 			Mean mean = new Mean();
 			double[] feat = new double[features.size()];
+			if(feat.length > 10000) {
+				LOGGER.warn("For '"+"all("+ts.getO()+","+tt.getO()+"' feature length is "+feat.length+"!");
+			}
 			for(int i=0; i<feat.length; i++) {
 				feat[i] = features.get(i);
-				LOGGER.trace("Feature ["+i+"] = "+feat[i]);
+//				LOGGER.trace("Feature ["+i+"] = "+feat[i]);
 			}
 			
 			sim = mean.evaluate(feat);

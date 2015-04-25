@@ -34,7 +34,7 @@ public class Instance {
 		this.uri = uri;
 	}
 	
-	public void addTuple(Tuple t) {
+	public void add(Tuple t) {
 		tuples.add(t);
 	}
 	
@@ -46,7 +46,7 @@ public class Instance {
 		return "<" + getURI() + ">";
 	}
 	
-	public void addTriple(Triple triple) {
+	public void add(Triple triple) {
 		Node object = triple.getObject();
 		String o = null, otype = null;
 		if(object.isURI()) { 
@@ -65,8 +65,8 @@ public class Instance {
 		));
 	}
 
-	public void addInverseTriple(Triple triple) {
-		this.addTuple(new Tuple(
+	public void addInverse(Triple triple) {
+		this.add(new Tuple(
 				triple.getObject().getURI(),
 				triple.getPredicate().getURI() + "_INV",
 				triple.getSubject().getURI(),
@@ -74,8 +74,8 @@ public class Instance {
 		));
 	}
 	
-	public void addInverseTuple(Tuple t) {
-		this.addTuple(new Tuple(
+	public void addInverse(Tuple t) {
+		this.add(new Tuple(
 				t.getO(),
 				t.getP() + "_INV",
 				t.getS(),

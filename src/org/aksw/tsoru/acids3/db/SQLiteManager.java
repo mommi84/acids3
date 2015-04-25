@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
@@ -152,6 +153,16 @@ public class SQLiteManager {
 		param.setTargetPath("data/colinda.nt");
 		param.setOraclePath("data/oracle-person1.csv");
 		new SQLiteManager(param.getPath(Arg.SOURCE));
+	}
+
+	public void deleteAll(TreeSet<String> uris) {
+		try {
+			for(String uri : uris)
+				statement.executeUpdate("delete from triples where s = '"+uri+"' or p = '"+uri+"' or o = '"+uri+"';");
+			this.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

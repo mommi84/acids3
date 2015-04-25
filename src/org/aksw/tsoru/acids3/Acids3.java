@@ -55,8 +55,8 @@ public class Acids3 implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		new Acids3("data/person11.nt", "data/person12.nt", "data/oracle-person1.csv").run();
-//		new Acids3("data/DBLP-semantified.nt", "data/ACM-semantified.nt", "data/dblp-acm.csv").run();
+//		new Acids3("data/person11.nt", "data/person12.nt", "data/oracle-person1.csv").run();
+		new Acids3("data/DBLP-semantified.nt", "data/ACM-semantified.nt", "data/dblp-acm.csv").run();
 //		new Acids3("data/ceur-ws.ttl", "data/colinda.nt", "data/oracle-person1.csv").run();
 	}
 

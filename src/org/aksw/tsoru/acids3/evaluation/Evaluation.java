@@ -44,9 +44,9 @@ public class Evaluation {
 			inst1.setProcessing(srcPro);
 			for(Tuple tu : cbd1) {
 				if(tu.getS().equals(s))
-					inst1.addTuple(tu);
+					inst1.add(tu);
 				else
-					inst1.addInverseTuple(tu);
+					inst1.addInverse(tu);
 			}
 			String t = oracle.get(s);
 			ArrayList<Tuple> cbd2 = tgtMan.getTuples(t);
@@ -54,9 +54,9 @@ public class Evaluation {
 			inst2.setProcessing(tgtPro);
 			for(Tuple tu : cbd2) {
 				if(tu.getS().equals(t))
-					inst2.addTuple(tu);
+					inst2.add(tu);
 				else
-					inst2.addInverseTuple(tu);
+					inst2.addInverse(tu);
 			}
 			
 			Example ex = new Example(inst1, inst2);

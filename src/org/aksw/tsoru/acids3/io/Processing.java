@@ -7,7 +7,6 @@ import java.util.TreeSet;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
-import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
@@ -89,6 +88,7 @@ public class Processing {
 	}
 
 	public TreeSet<String> getIndex() {
+		// TODO Make this scalable by querying the database and ask for .nextURI()
 		return index;
 	}
 

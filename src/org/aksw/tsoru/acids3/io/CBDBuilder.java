@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.util.Cache;
 import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.system.StreamRDF;
@@ -24,20 +23,19 @@ public class CBDBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	protected static void build(Processing p, final ArrayList<Instance> instance) {
+	protected static void build(Processing p, final ArrayList<Instance> instances) {
 		
 		
 		final HashMap<String, Instance> uriToInstance = new HashMap<String, Instance>();
-		for(Instance in : instance)
+		for(Instance in : instances)
 			uriToInstance.put(in.getURI(), in);
 		
-		final Cache cache = p.getCache();
 		final Arg arg = p.getArg();
 		String base = Processing.getBase();
 		Parameters param = p.getParam();
 		
 		final ArrayList<String> uris = new ArrayList<String>();
-		for(Instance in : cache.instances)
+		for(Instance in : instances)
 			uris.add(in.getURI());
 		
 		StreamRDF dest = new StreamRDF() {
@@ -51,10 +49,11 @@ public class CBDBuilder {
 				
 				String subjURI = triple.getSubject().getURI();
 				if(uris.contains(subjURI))
-					uriToInstance.get(subjURI).addTriple(triple);
+					uriToInstance.get(subjURI).add(triple);
+				// TODO This way vs having inverse triples into DB?
 				String objURI = triple.getObject().toString();
 				if(uris.contains(objURI))
-					uriToInstance.get(objURI).addInverseTriple(triple);
+					uriToInstance.get(objURI).addInverse(triple);
 			}
 			
 			@Override
@@ -78,7 +77,7 @@ public class CBDBuilder {
 			
 		};
 		
-		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
+		RDFDataMgr.parse(dest, base + param.getPath(arg));
 		
 		
 	}

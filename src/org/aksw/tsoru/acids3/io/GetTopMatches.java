@@ -41,9 +41,9 @@ public class GetTopMatches {
 			
 			for(Tuple t : cbd) {
 				if(t.getS().equals(uri))
-					tgt.addTuple(t);
+					tgt.add(t);
 				else
-					tgt.addInverseTuple(t);
+					tgt.addInverse(t);
 			}
 			
 			LOGGER.debug("Target CBD size = "+tgt.getTuples().size());
