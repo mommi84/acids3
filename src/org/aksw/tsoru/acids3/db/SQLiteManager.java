@@ -11,10 +11,10 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
+import org.aksw.tsoru.acids3.util.NodeUtils;
 import org.aksw.tsoru.acids3.util.Randomly;
 import org.apache.log4j.Logger;
 
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 
 /**
@@ -60,25 +60,14 @@ public class SQLiteManager {
 	 */
 	public void insert(Triple triple) {
 		
-		String o = "", otype = "";
+		NodeUtils utils = new NodeUtils(triple.getObject());
+		String object = utils.getObject();
+		String otype = utils.getOtype();
 		
-		Node obj = triple.getObject();
-		
-		if(obj.isURI()) {
-			o = obj.getURI();
-			otype = "URI";
-		}
-		if(obj.isLiteral()) {
-			o = "" + obj.getLiteral().getValue();
-			otype = obj.getLiteralDatatypeURI();
-			if(otype == null)
-				otype = "STRING";
-		}
-	
 		String q = "insert into triples values('"
 				+ triple.getSubject().getURI() + "', '" 
 				+ triple.getPredicate().getURI() + "', '" 
-				+ o.replaceAll("'", "''") + "', '" 
+				+ object + "', '" 
 				+ otype + "')";
 		
 		try {
