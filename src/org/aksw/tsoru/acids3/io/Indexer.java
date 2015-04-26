@@ -17,6 +17,13 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
+ * TODO Add a table in the DB with [instance_uri, int_incoming, int_outcoming, flag_hub, flag_authority].
+ * - create table
+ * - compute counts and fill out table
+ * - change index() to void
+ * 
+ * Problem: will it scale? SQL commits vs In-memory data.
+ * 
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
@@ -25,6 +32,7 @@ public class Indexer {
 	private static final Logger LOGGER = Logger.getLogger(Indexer.class);
 	
 	protected static TreeSet<String> index(Processing p) {
+		
 		
 		final TreeSet<String> instances = new TreeSet<String>();
 		
@@ -91,9 +99,11 @@ public class Indexer {
 					addClass(obj);
 					return;
 				}
-					
+				
 				sql.insert(triple);
 				instances.add(triple.getSubject().getURI());
+				
+				// TODO count in-/out-coming links
 				
 				if(triple.getObject().isURI())
 					instances.add(triple.getObject().getURI());
