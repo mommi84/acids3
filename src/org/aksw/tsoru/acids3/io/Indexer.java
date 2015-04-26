@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
+import org.aksw.tsoru.acids3.db.Field;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
@@ -17,12 +18,7 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.sparql.core.Quad;
 
 /**
- * TODO Add a table in the DB with [instance_uri, int_incoming, int_outcoming, flag_hub, flag_authority].
- * - create table
- * - compute counts and fill out table
- * - change index() to void
- * 
- * Problem: will it scale? SQL commits vs In-memory data.
+ * TODO change index() to void
  * 
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
@@ -68,11 +64,12 @@ public class Indexer {
 				Node pred = triple.getPredicate();
 				Node obj = triple.getObject();
 				
-				// predicate is always part of the ontology
-				String p = pred.getURI();
-				properties.add(p);
+				String subjURI = subj.getURI();
+				String predURI = pred.getURI();
+				// collect predicates
+				properties.add(predURI);
 				
-				if(p.equals(URLs.RDF_TYPE)) {
+				if(predURI.equals(URLs.RDF_TYPE)) {
 					// add classes to the ontology forbidden list
 					addClass(obj);
 					// if it's type class, add the subject
@@ -93,7 +90,7 @@ public class Indexer {
 					 */
 					return;
 				}
-				if(p.equals(URLs.RDFS_SUBCLASSOF)) {
+				if(predURI.equals(URLs.RDFS_SUBCLASSOF)) {
 					// add classes to the ontology forbidden list
 					addClass(subj);
 					addClass(obj);
@@ -101,13 +98,15 @@ public class Indexer {
 				}
 				
 				sql.insert(triple);
-				instances.add(triple.getSubject().getURI());
+				instances.add(subjURI);
 				
-				// TODO count in-/out-coming links
+				sql.add(subjURI, Field.OUTCOMING);
 				
-				if(triple.getObject().isURI())
-					instances.add(triple.getObject().getURI());
-				else {
+				if(obj.isURI()) {
+					String objURI = obj.getURI();
+					instances.add(objURI);
+					sql.add(objURI, Field.INCOMING);
+				} else {
 					// compute minimum and maximum for double values
 					Double d = null;
 					try {
@@ -116,12 +115,12 @@ public class Indexer {
 						// not numerical or blank node => next triple
 						return;
 					}
-					if(!cache.containsKey(p))
-						cache.put(p, new Cache());
-					if(d > cache.get(p).max)
-						cache.get(p).max = d;
-					if(d < cache.get(p).min)
-						cache.get(p).min = d;
+					if(!cache.containsKey(predURI))
+						cache.put(predURI, new Cache());
+					if(d > cache.get(predURI).max)
+						cache.get(predURI).max = d;
+					if(d < cache.get(predURI).min)
+						cache.get(predURI).min = d;
 				}
 					
 			}

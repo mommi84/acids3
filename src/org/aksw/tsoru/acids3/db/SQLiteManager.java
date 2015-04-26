@@ -16,6 +16,7 @@ import org.aksw.tsoru.acids3.util.Randomly;
 import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
@@ -24,13 +25,20 @@ import com.hp.hpl.jena.graph.Triple;
 public class SQLiteManager {
 
 	private static final Logger LOGGER = Logger.getLogger(SQLiteManager.class);
-	
+
 	private Statement statement;
 	private Connection connection;
 	private String dbPrefix;
 
 	private String filename;
 
+	/**
+	 * Create the manager. Add two tables in the DB: 'triples' for [subject,
+	 * predicate, object, object_type] and 'instances' for [instance_uri,
+	 * int_incoming, int_outcoming, flag_hub, flag_authority].
+	 * 
+	 * @param dbPrefix
+	 */
 	public SQLiteManager(String dbPrefix) {
 
 		filename = dbPrefix + "_" + Randomly.getRandom() + ".db";
@@ -42,11 +50,16 @@ public class SQLiteManager {
 			connection.setAutoCommit(false);
 			statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
-			
+
 			this.dbPrefix = dbPrefix;
-			
+
 			statement.executeUpdate("drop table if exists triples");
 			statement.executeUpdate("create table triples(s, p, o, otype)");
+
+			statement.executeUpdate("drop table if exists instances");
+			statement
+					.executeUpdate("create table instances(uri, incoming, outcoming, hub, authority)");
+
 			connection.commit();
 		} catch (ClassNotFoundException | SQLException e) {
 			LOGGER.error(e.getMessage());
@@ -56,41 +69,100 @@ public class SQLiteManager {
 
 	/**
 	 * @param triple
-	 * @throws SQLException
 	 */
 	public void insert(Triple triple) {
-		
+
 		NodeUtils utils = new NodeUtils(triple.getObject());
 		String object = utils.getObject();
 		String otype = utils.getOtype();
-		
+
 		String q = "insert into triples values('"
-				+ triple.getSubject().getURI() + "', '" 
-				+ triple.getPredicate().getURI() + "', '" 
-				+ object + "', '" 
+				+ triple.getSubject().getURI() + "', '"
+				+ triple.getPredicate().getURI() + "', '" + object + "', '"
 				+ otype + "')";
-		
+
 		try {
 			statement.executeUpdate(q);
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-			LOGGER.error("Query: "+q);
+			LOGGER.error("Query: " + q);
+		}
+
+	}
+
+	public void add(String instanceURI, Field field) {
+		// if instance exists
+		int amount = this.amount(instanceURI, field);
+		if (amount == 0)
+			this.addInstance(instanceURI, field);
+		else
+			this.increase(instanceURI, field, amount);
+
+	}
+
+	private void increase(String instanceURI, Field field, int amount) {
+		String q = "update instances set " + field.getName() + " = '"
+				+ (amount + 1) + "' where uri = '" + instanceURI + "'";
+
+		try {
+			statement.executeUpdate(q);
+			LOGGER.trace("Set " + field + " for '" + instanceURI + "' to "
+					+ (amount + 1));
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
+		}
+	}
+
+	private int amount(String instanceURI, Field field) {
+
+		String q = "select " + field.getName()
+				+ " from instances where uri = '" + instanceURI + "'";
+
+		try {
+			ResultSet rs = statement.executeQuery(q);
+			if (!rs.next())
+				return 0;
+			return rs.getInt(field.getName());
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
+		}
+
+		return 0;
+
+	}
+
+	private void addInstance(String instanceURI, Field field) {
+
+		String str = (field == Field.OUTCOMING) ? "'1', '0'" : "'0', '1'";
+
+		String q = "insert into instances values('" + instanceURI + "', " + str
+				+ ", '0', '0')";
+
+		try {
+			statement.executeUpdate(q);
+			LOGGER.trace("Set " + field + " for '" + instanceURI + "' to 1");
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
 		}
 
 	}
 
 	public ArrayList<Tuple> getTuples(String uri) {
-		
+
 		ArrayList<Tuple> res = new ArrayList<Tuple>();
-		
+
 		ResultSet rs;
 		try {
-			rs = statement
-					.executeQuery("select * from triples where s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI');");
-//					.executeQuery("select * from triples where (s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI')) and p <> '"+URLs.RDF_TYPE+"';");
+			rs = statement.executeQuery("select * from triples where s = '"
+					+ uri + "' or (o = '" + uri + "' and otype = 'URI');");
+			// .executeQuery("select * from triples where (s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI')) and p <> '"+URLs.RDF_TYPE+"';");
 			while (rs.next()) {
 				// read the result set
-				Tuple t = new Tuple(rs.getString("s"), rs.getString("p"), rs.getString("o"), rs.getString("otype"));
+				Tuple t = new Tuple(rs.getString("s"), rs.getString("p"),
+						rs.getString("o"), rs.getString("otype"));
 				res.add(t);
 			}
 		} catch (SQLException e) {
@@ -99,8 +171,6 @@ public class SQLiteManager {
 
 		return res;
 	}
-
-	
 
 	public void commit() {
 		try {
@@ -141,13 +211,28 @@ public class SQLiteManager {
 		param.setSourcePath("data/ceur-ws.ttl");
 		param.setTargetPath("data/colinda.nt");
 		param.setOraclePath("data/oracle-person1.csv");
-		new SQLiteManager(param.getPath(Arg.SOURCE));
+		SQLiteManager sql = new SQLiteManager(param.getPath(Arg.SOURCE));
+
+		String uri = "http://subject.com";
+		for (int i = 0; i < 1000; i++) {
+			Triple t = new Triple(ResourceFactory.createResource(uri).asNode(),
+					ResourceFactory.createProperty("http://property.com")
+							.asNode(), ResourceFactory.createResource(
+							"http://object.com/" + i).asNode());
+			sql.insert(t);
+			// sql.commit();
+			LOGGER.info("#triples = " + sql.getTuples(uri).size());
+		}
+		for (Tuple tu : sql.getTuples(uri))
+			LOGGER.info(tu);
+
 	}
 
 	public void deleteAll(TreeSet<String> uris) {
 		try {
-			for(String uri : uris)
-				statement.executeUpdate("delete from triples where s = '"+uri+"' or p = '"+uri+"' or o = '"+uri+"';");
+			for (String uri : uris)
+				statement.executeUpdate("delete from triples where s = '" + uri
+						+ "' or p = '" + uri + "' or o = '" + uri + "';");
 			this.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
