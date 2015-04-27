@@ -3,7 +3,6 @@ package org.aksw.tsoru.acids3.db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -239,6 +238,23 @@ public class SQLiteManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public int count() {
+		
+		String q = "select count(*) as c from triples;";
+
+		try {
+			ResultSet rs = statement.executeQuery(q);
+			if (!rs.next())
+				return 0;
+			return rs.getInt("c");
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
+		}
+
+		return 0;
 	}
 
 }

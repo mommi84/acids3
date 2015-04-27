@@ -25,9 +25,8 @@ public class Cache {
 		instances = new ArrayList<Instance>();
 	}
 
-	public void saveCount() {
-		nTriples = new Integer(i);
-		this.iReset();
+	public void setNTriples(int n) {
+		nTriples = new Integer(n);
 	}
 
 	public void iReset() {
