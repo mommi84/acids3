@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.Field;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
-import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
+import org.aksw.tsoru.acids3.similarity.value.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;
@@ -100,12 +100,12 @@ public class Indexer {
 				sql.insert(triple);
 				instances.add(subjURI);
 				
-				sql.add(subjURI, Field.OUTCOMING);
+//				sql.add(subjURI, Field.OUTCOMING);
 				
 				if(obj.isURI()) {
 					String objURI = obj.getURI();
 					instances.add(objURI);
-					sql.add(objURI, Field.INCOMING);
+//					sql.add(objURI, Field.INCOMING);
 				} else {
 					// compute minimum and maximum for double values
 					Double d = null;

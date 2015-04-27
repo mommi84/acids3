@@ -9,7 +9,7 @@ import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.similarity.LogarithmicSimilarity;
+import org.aksw.tsoru.acids3.similarity.value.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
 

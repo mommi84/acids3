@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.similarity;
+package org.aksw.tsoru.acids3.similarity.value;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +12,7 @@ import org.aksw.tsoru.acids3.util.Transform;
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
-public class WEDSimilarity implements Similarity {
+public class WEDSimilarity implements ValueSimilarity {
 	
 	public static final double INIT_FULL_WEIGHT = 1.0;
 	public static final double INIT_CASE_WEIGHT = 0.5;

@@ -9,7 +9,7 @@ import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.similarity.OverallSimilarity;
+import org.aksw.tsoru.acids3.similarity.node.OverallSimilarity;
 import org.aksw.tsoru.acids3.util.Oracle;
 import org.apache.log4j.Logger;
 

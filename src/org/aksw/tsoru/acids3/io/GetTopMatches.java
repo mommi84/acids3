@@ -11,7 +11,7 @@ import org.aksw.tsoru.acids3.filters.ReededFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.model.util.OrderBySimDesc;
-import org.aksw.tsoru.acids3.similarity.OverallSimilarity;
+import org.aksw.tsoru.acids3.similarity.node.OverallSimilarity;
 import org.apache.log4j.Logger;
 
 /**

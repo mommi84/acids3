@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.similarity;
+package org.aksw.tsoru.acids3.similarity.value;
 
 import java.util.HashMap;
 
@@ -8,7 +8,7 @@ import org.aksw.tsoru.acids3.util.ValueParser;
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
-public class LogarithmicSimilarity implements Similarity {
+public class LogarithmicSimilarity implements ValueSimilarity {
 
 	private HashMap<String, Double> extrema = new HashMap<String, Double>();
 

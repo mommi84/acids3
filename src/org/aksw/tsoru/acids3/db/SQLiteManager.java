@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.db;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -61,6 +62,7 @@ public class SQLiteManager {
 					.executeUpdate("create table instances(uri, incoming, outcoming, hub, authority)");
 
 			connection.commit();
+						
 		} catch (ClassNotFoundException | SQLException e) {
 			LOGGER.error(e.getMessage());
 		}
