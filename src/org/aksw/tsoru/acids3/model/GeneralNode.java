@@ -8,8 +8,9 @@ public abstract class GeneralNode {
 	
 	protected String id;
 	
-	public GeneralNode() {
+	public GeneralNode(String id) {
 		super();
+		this.id = id;
 	}
 	
 	public String getID() {

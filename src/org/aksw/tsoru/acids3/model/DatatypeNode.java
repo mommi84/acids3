@@ -6,19 +6,17 @@ package org.aksw.tsoru.acids3.model;
  */
 public class DatatypeNode extends GeneralNode {
 	
-	private String value;
-	
 	public DatatypeNode(String value) {
-		super();
-		this.setValue(value);
+		super(value);
 	}
 
+	/**
+	 * Value is the ID itself.
+	 * 
+	 * @return
+	 */
 	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
+		return this.getID();
 	}
 	
 }

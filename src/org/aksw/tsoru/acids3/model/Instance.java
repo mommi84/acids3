@@ -19,8 +19,7 @@ public class Instance extends GeneralNode {
 	private Processing processing;
 
 	public Instance(String uri) {
-		super();
-		this.id = uri;
+		super(uri);
 		this.tuples = new ArrayList<Tuple>();
 	}
 

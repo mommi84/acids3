@@ -32,9 +32,12 @@ public class InstanceSimilarity implements NodeSimilarity {
 
 				GeneralNode sObj = ts.getObj();
 				GeneralNode tObj = tt.getObj();
+				
+				if(sObj.getID().equals("null"))
+					LOGGER.warn("");
 
 				Double d = SimilarityController.compute(sObj, tObj, depth);
-				LOGGER.trace("sim("+sObj+","+tObj+ ") = "+d);
+				LOGGER.info("instance_sim("+sObj+","+tObj+ ") = "+d);
 				// if depth too deep, d is null
 				if(d != null)
 					features.add(d);
