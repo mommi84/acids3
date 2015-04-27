@@ -93,7 +93,7 @@ public class RandomInstance {
 		RDFDataMgr.parse(dest, base + param.getPath(p.getArg()));
 		
 		for(Instance inst : cache.instances)
-			LOGGER.trace("Instance URI = "+inst.getURI());
+			LOGGER.trace("Instance URI = "+inst.getID());
 		
 		return cache.instances;
 		

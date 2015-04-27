@@ -12,9 +12,7 @@ import com.hp.hpl.jena.graph.Triple;
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
-public class Instance {
-
-	private String uri;
+public class Instance extends GeneralNode {
 
 	private ArrayList<Tuple> tuples;
 	
@@ -22,16 +20,12 @@ public class Instance {
 
 	public Instance(String uri) {
 		super();
-		this.uri = uri;
+		this.id = uri;
 		this.tuples = new ArrayList<Tuple>();
 	}
 
-	public String getURI() {
-		return uri;
-	}
-
-	public void setURI(String uri) {
-		this.uri = uri;
+	public void setID(String id) {
+		this.id = id;
 	}
 	
 	public void add(Tuple t) {
@@ -43,35 +37,7 @@ public class Instance {
 	}
 	
 	public String toString() {
-		return "<" + getURI() + ">";
-	}
-	
-	public void add(Triple triple) {
-		Node object = triple.getObject();
-		String o = null, otype = null;
-		if(object.isURI()) { 
-			o = object.getURI();
-			otype = "URI";
-		}
-		if(object.isLiteral()) {
-			o = "" + object.getLiteral().getValue();
-			otype = object.getLiteralDatatypeURI();
-			if(otype == null)
-				otype = "STRING";
-		}
-		tuples.add(new Tuple(triple.getSubject().getURI(),
-				triple.getPredicate().getURI(),
-				o, otype
-		));
-	}
-
-	public void addInverse(Triple triple) {
-		this.add(new Tuple(
-				triple.getObject().getURI(),
-				triple.getPredicate().getURI() + "_INV",
-				triple.getSubject().getURI(),
-				"URI"
-		));
+		return "<" + getID() + ">";
 	}
 	
 	public void addInverse(Tuple t) {

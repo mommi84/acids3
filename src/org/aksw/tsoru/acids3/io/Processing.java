@@ -93,7 +93,9 @@ public class Processing {
 	}
 
 	public ArrayList<Example> topMatches(Instance src, final ArrayList<AllowedFilter> allowedFilters) {
-		return GetTopMatches.get(this, src, allowedFilters);
+		LOGGER.fatal("End of the world reached.");
+		return null;
+//		return GetTopMatches.get(this, src, allowedFilters);
 	}
 	
 	public void close() {

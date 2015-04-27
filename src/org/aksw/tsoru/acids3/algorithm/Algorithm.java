@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
-import org.aksw.tsoru.acids3.evaluation.Evaluation;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.filters.FilterBuilder;
 import org.aksw.tsoru.acids3.io.Arg;
@@ -75,15 +74,15 @@ public class Algorithm implements Runnable {
 				
 				// get (pseudo-)random source example
 				Instance src = srcPro.randomPick();
-				LOGGER.info("Instance URI = "+src.getURI());
+				LOGGER.info("Instance URI = "+src.getID());
 				srcPro.getCache().resetInstances();
 				LOGGER.info("Source CBD size = "+src.getTuples().size());
 				src.setProcessing(srcPro);
 				
 				ArrayList<Example> topM = tgtPro.topMatches(src, allowedFilters);
 				for(Example ex : topM) {
-					String s = ex.getSource().getURI();
-					String t = ex.getTarget().getURI();
+					String s = ex.getSource().getID();
+					String t = ex.getTarget().getID();
 					LOGGER.info("Question: Are <"+s+"> and <"+t+"> the same?");
 					for(Tuple tu : ex.getSource().getTuples())
 						LOGGER.debug(tu);
@@ -119,7 +118,7 @@ public class Algorithm implements Runnable {
 						+ " | c(x) = " + svm.classify(ex));
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
-			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
+//			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
 		}
 		
 		srcPro.close();

@@ -161,16 +161,16 @@ public class Indexer {
 			
 		}
 		
-		LOGGER.info("Ontology entities found = "+ontology.size());
-		for(String uri : ontology) {
-			LOGGER.trace("Class: "+uri);
-		}
-		LOGGER.info("Deleting unnecessary triples from store...");
-		sql.deleteAll(ontology);
-		instances.removeAll(ontology);
+//		LOGGER.info("Ontology entities found = "+ontology.size());
+//		for(String uri : ontology) {
+//			LOGGER.trace("Class: "+uri);
+//		}
+//		LOGGER.info("Deleting unnecessary triples from store...");
+//		sql.deleteAll(ontology);
+//		instances.removeAll(ontology);
 		
-		LOGGER.info("Ontology blank nodes found = "+ontoBlankNodes.size());
-		instances.removeAll(ontoBlankNodes);
+//		LOGGER.info("Ontology blank nodes found = "+ontoBlankNodes.size());
+//		instances.removeAll(ontoBlankNodes);
 		
 		instances.removeAll(properties);
 		

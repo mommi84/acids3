@@ -10,7 +10,8 @@ import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
-import org.aksw.tsoru.acids3.similarity.node.TupleSimilarity;
+import org.aksw.tsoru.acids3.sim.SimilarityController;
+import org.aksw.tsoru.acids3.similarity.node.OldTupleSimilarity;
 import org.apache.log4j.Logger;
 
 /**
@@ -42,7 +43,6 @@ public class FilterBuilder {
 		LOGGER.info("Building filters using " + RANDOM_SAMPLES
 				+ " random samples...");
 
-		TupleSimilarity tsim = new TupleSimilarity();
 		HashMap<String, AllowedFilter> ranks = new HashMap<String, AllowedFilter>();
 
 		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
@@ -57,24 +57,30 @@ public class FilterBuilder {
 			tgt.setProcessing(tgtPro);
 
 			Example ex = new Example(src, tgt);
+			
+			Double sim = SimilarityController.compute(ex);
+			LOGGER.info("sim("+ex+") = "+sim);
 
-			for (Tuple ts : src.getTuples()) {
-				for (Tuple tt : tgt.getTuples()) {
-					String measure = "[" + ts.getP() + ", " + tt.getP() + "]";
-					AllowedFilter rank;
-					if (ranks.containsKey(measure))
-						rank = ranks.get(measure);
-					else {
-						rank = new AllowedFilter(measure);
-						ranks.put(measure, rank);
-					}
-					Double sim = tsim.compute(ts, tt,
-							srcPro.getLogsim(ts.getP()),
-							tgtPro.getLogsim(tt.getP()), ex, rank);
-					LOGGER.trace("Value for sim_" + measure + " is " + sim);
-					rank.add(sim);
-				}
-			}
+			// for each pair of tuples, compute their similarity and push it
+			// in the feature array for the corresponding measure.
+//			for (Tuple ts : src.getTuples()) {
+//				for (Tuple tt : tgt.getTuples()) {
+//					String measure = "[" + ts.getP() + ", " + tt.getP() + "]";
+//					AllowedFilter rank;
+//					if (ranks.containsKey(measure))
+//						rank = ranks.get(measure);
+//					else {
+//						rank = new AllowedFilter(measure);
+//						ranks.put(measure, rank);
+//					}
+//					Double sim = tsim.compute(ts, tt,
+//							srcPro.getLogsim(ts.getP()),
+//							tgtPro.getLogsim(tt.getP()), ex, rank);
+//					LOGGER.trace("Value for sim_" + measure + " is " + sim);
+//					rank.add(sim);
+//				}
+//			}
+			
 		}
 		// important!
 		srcPro.getCache().resetInstances();

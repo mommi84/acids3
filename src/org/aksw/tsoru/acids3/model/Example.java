@@ -57,7 +57,7 @@ public class Example {
 	}
 	
 	public String toString() {
-		return "<" + source.getURI() + ", " + target.getURI() + ", " + sim + ">";
+		return "<" + source.getID() + ", " + target.getID() + ", " + sim + ">";
 	}
 
 	public void setParent(boolean parent) {

@@ -1,5 +1,9 @@
 package org.aksw.tsoru.acids3.db;
 
+import org.aksw.tsoru.acids3.model.DatatypeNode;
+import org.aksw.tsoru.acids3.model.GeneralNode;
+import org.aksw.tsoru.acids3.model.Instance;
+
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
@@ -7,6 +11,9 @@ package org.aksw.tsoru.acids3.db;
 public class Tuple {
 	
 	private String s, p, o, otype;
+	
+	private Instance subj;
+	private GeneralNode obj;
 
 	public String getS() {
 		return s;
@@ -46,11 +53,27 @@ public class Tuple {
 		this.p = p;
 		this.o = o;
 		this.otype = otype;
+		
+		this.subj = new Instance(s);
+		
+		if(otype.equals("URI"))
+			this.obj = new Instance(o);
+		else
+			this.obj = new DatatypeNode(o);
 	}
 	
 	public String toString() {
 		return s + " " + p + " " + o;
 	}
+
+	public Instance getSubj() {
+		return subj;
+	}
+
+	public GeneralNode getObj() {
+		return obj;
+	}
+	
 	
 
 }

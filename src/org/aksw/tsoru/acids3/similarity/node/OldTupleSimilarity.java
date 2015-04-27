@@ -15,12 +15,12 @@ import org.apache.log4j.Logger;
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
-public class TupleSimilarity {
+public class OldTupleSimilarity {
 	
-	private static final Logger LOGGER = Logger.getLogger(TupleSimilarity.class);
+	private static final Logger LOGGER = Logger.getLogger(OldTupleSimilarity.class);
 	private static WEDSimilarity wed = new WEDSimilarity();
 
-	public TupleSimilarity() {
+	public OldTupleSimilarity() {
 		super();
 	}
 	

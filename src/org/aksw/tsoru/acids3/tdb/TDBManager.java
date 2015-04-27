@@ -124,7 +124,7 @@ public class TDBManager {
 
 		ArrayList<Triple> results = new ArrayList<Triple>();
 
-		String qs1 = "DESCRIBE <" + inst.getURI() + ">";
+		String qs1 = "DESCRIBE <" + inst.getID() + ">";
 
 		try (QueryExecution qExec = QueryExecutionFactory.create(qs1, dataset)) {
 			Model m = qExec.execDescribe();

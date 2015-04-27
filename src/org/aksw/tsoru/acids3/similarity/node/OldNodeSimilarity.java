@@ -9,7 +9,7 @@ import org.aksw.tsoru.acids3.model.Example;
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
-public interface NodeSimilarity {
+public interface OldNodeSimilarity {
 	
 	public Double compute(Example ex, ArrayList<AllowedFilter> filters);
 
