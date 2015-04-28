@@ -1,5 +1,6 @@
 package org.aksw.tsoru.acids3.db;
 
+import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.DatatypeNode;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -47,7 +48,7 @@ public class Tuple {
 		this.otype = otype;
 	}
 
-	public Tuple(String s, String p, String o, String otype) {
+	public Tuple(String s, String p, String o, String otype, Processing pro) {
 		super();
 		this.s = s;
 		this.p = p;
@@ -55,9 +56,12 @@ public class Tuple {
 		this.otype = otype;
 		
 		this.subj = new Instance(s);
+		this.subj.setProcessing(pro);
 		
-		if(otype.equals("URI"))
+		if(otype.equals("URI")) {
 			this.obj = new Instance(o);
+			((Instance) this.obj).setProcessing(pro);
+		}
 		else
 			this.obj = new DatatypeNode(o);
 	}

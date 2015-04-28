@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.io.CBDBuilder;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -22,7 +23,7 @@ public class FilterBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(FilterBuilder.class);
 
-	private static final int RANDOM_SAMPLES = 50;
+	private static final int RANDOM_SAMPLES = 1; // 50;
 
 	private Processing srcPro, tgtPro;
 
@@ -45,9 +46,17 @@ public class FilterBuilder {
 
 		HashMap<String, AllowedFilter> ranks = new HashMap<String, AllowedFilter>();
 
-		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
-		ArrayList<Instance> targets = tgtPro.randomPick(RANDOM_SAMPLES);
-
+//		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
+//		ArrayList<Instance> targets = tgtPro.randomPick(RANDOM_SAMPLES);
+		
+		// TODO remove me
+		ArrayList<Instance> sources = new ArrayList<Instance>();
+		sources.add(new Instance("http://dblp.rkbexplorer.com/id/conf/sigmod/GuhaJKSY02"));
+		CBDBuilder.build(srcPro, sources);
+		ArrayList<Instance> targets = new ArrayList<Instance>();
+		targets.add(new Instance("http://acm.rkbexplorer.com/id/313897"));
+		CBDBuilder.build(tgtPro, targets);
+		
 		for (int i = 0; i < RANDOM_SAMPLES; i++) {
 
 			Instance src = sources.get(i);
@@ -57,6 +66,11 @@ public class FilterBuilder {
 			tgt.setProcessing(tgtPro);
 
 			Example ex = new Example(src, tgt);
+			
+			for(Tuple t : src.getTuples())
+				LOGGER.trace("src: "+t);
+			for(Tuple t : tgt.getTuples())
+				LOGGER.trace("tgt: "+t);
 			
 			Double sim = SimilarityController.compute(ex);
 			LOGGER.info("sim("+ex+") = "+sim);

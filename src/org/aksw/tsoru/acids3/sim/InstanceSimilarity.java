@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.sim;
 import java.util.ArrayList;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.io.CBDBuilder;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -24,7 +25,11 @@ public class InstanceSimilarity implements NodeSimilarity {
 			return null;
 		
 		Instance src = (Instance) s;
+		if(!src.isCrawled())
+			CBDBuilder.build(src.getProcessing(), src);
 		Instance tgt = (Instance) t;
+		if(!tgt.isCrawled())
+			CBDBuilder.build(tgt.getProcessing(), tgt);
 
 		ArrayList<Double> features = new ArrayList<Double>();
 

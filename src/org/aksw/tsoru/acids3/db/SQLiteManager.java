@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
+import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.util.NodeUtils;
 import org.aksw.tsoru.acids3.util.Randomly;
 import org.apache.log4j.Logger;
@@ -25,6 +26,8 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 public class SQLiteManager {
 
 	private static final Logger LOGGER = Logger.getLogger(SQLiteManager.class);
+	
+	private Processing processing;
 
 	private Statement statement;
 	private Connection connection;
@@ -39,7 +42,10 @@ public class SQLiteManager {
 	 * 
 	 * @param dbPrefix
 	 */
-	public SQLiteManager(String dbPrefix) {
+	public SQLiteManager(Processing processing, String dbPrefix) {
+		
+		this.processing = processing;
+		this.dbPrefix = dbPrefix;
 
 		filename = dbPrefix + "_" + Randomly.getRandom() + ".db";
 		LOGGER.info(filename + " created.");
@@ -51,7 +57,6 @@ public class SQLiteManager {
 			statement = connection.createStatement();
 			statement.setQueryTimeout(30); // set timeout to 30 sec.
 
-			this.dbPrefix = dbPrefix;
 
 			statement.executeUpdate("drop table if exists triples");
 			statement.executeUpdate("create table triples(s, p, o, otype)");
@@ -163,7 +168,7 @@ public class SQLiteManager {
 			while (rs.next()) {
 				// read the result set
 				Tuple t = new Tuple(rs.getString("s"), rs.getString("p"),
-						rs.getString("o"), rs.getString("otype"));
+						rs.getString("o"), rs.getString("otype"), processing);
 				res.add(t);
 			}
 		} catch (SQLException e) {
@@ -212,7 +217,7 @@ public class SQLiteManager {
 		param.setSourcePath("data/ceur-ws.ttl");
 		param.setTargetPath("data/colinda.nt");
 		param.setOraclePath("data/oracle-person1.csv");
-		SQLiteManager sql = new SQLiteManager(param.getPath(Arg.SOURCE));
+		SQLiteManager sql = new SQLiteManager(new Processing(Arg.SOURCE, param), param.getPath(Arg.SOURCE));
 
 		String uri = "http://subject.com";
 		for (int i = 0; i < 1000; i++) {
@@ -255,6 +260,10 @@ public class SQLiteManager {
 		}
 
 		return 0;
+	}
+
+	public Processing getProcessing() {
+		return processing;
 	}
 
 }

@@ -17,11 +17,11 @@ public class CBDBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	protected static void build(Processing p, final ArrayList<Instance> instances) {
-			
-		final HashMap<String, Instance> uriToInstance = new HashMap<String, Instance>();
-		for(Instance in : instances)
-			uriToInstance.put(in.getID(), in);
+	public static void build(Processing p, final ArrayList<Instance> instances) {
+		
+//		final HashMap<String, Instance> uriToInstance = new HashMap<String, Instance>();
+//		for(Instance in : instances)
+//			uriToInstance.put(in.getID(), in);
 		
 		SQLiteManager sql = p.getSql();
 		
@@ -35,10 +35,17 @@ public class CBDBuilder {
 					in.addInverse(t);
 			}
 			
+			in.setCrawled(true);
 			LOGGER.trace(uri+" has now "+in.getTuples().size()+" triples.");
 			
 		}
 				
+	}
+
+	public static void build(Processing processing, Instance src) {
+		ArrayList<Instance> array = new ArrayList<Instance>();
+		array.add(src);
+		build(processing, array);
 	}
 
 }

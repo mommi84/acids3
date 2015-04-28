@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.io.Processing;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
@@ -17,6 +14,8 @@ public class Instance extends GeneralNode {
 	private ArrayList<Tuple> tuples;
 	
 	private Processing processing;
+
+	private boolean crawled = false;
 
 	public Instance(String uri) {
 		super(uri);
@@ -44,7 +43,8 @@ public class Instance extends GeneralNode {
 				t.getO(),
 				t.getP() + "_INV",
 				t.getS(),
-				"URI"
+				"URI",
+				processing
 		));	}
 
 	public Processing getProcessing() {
@@ -53,6 +53,14 @@ public class Instance extends GeneralNode {
 
 	public void setProcessing(Processing processing) {
 		this.processing = processing;
+	}
+	
+	public void setCrawled(boolean crawled) {
+		this.crawled = crawled;
+	}
+	
+	public boolean isCrawled() {
+		return crawled;
 	}
 	
 }

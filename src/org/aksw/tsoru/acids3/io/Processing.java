@@ -38,7 +38,7 @@ public class Processing {
 		this.cache = new Cache();
 		this.arg = arg;
 		this.param = param;
-		sql = new SQLiteManager(param.getPath(arg));
+		sql = new SQLiteManager(this, param.getPath(arg));
 	}
 	
 	public SQLiteManager getSql() {
