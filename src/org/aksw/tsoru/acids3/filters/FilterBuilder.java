@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.CBDBuilder;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.Example;
@@ -49,15 +50,10 @@ public class FilterBuilder {
 //		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
 //		ArrayList<Instance> targets = tgtPro.randomPick(RANDOM_SAMPLES);
 		
-		// TODO remove me
-		ArrayList<Instance> sources = new ArrayList<Instance>();
-		sources.add(new Instance("http://dblp.rkbexplorer.com/id/conf/sigmod/GuhaJKSY02"));
-		CBDBuilder.build(srcPro, sources);
-		ArrayList<Instance> targets = new ArrayList<Instance>();
-		targets.add(new Instance("http://acm.rkbexplorer.com/id/313897"));
-		CBDBuilder.build(tgtPro, targets);
+		ArrayList<Instance> sources = getTestSamples(Arg.SOURCE);
+		ArrayList<Instance> targets = getTestSamples(Arg.TARGET);
 		
-		for (int i = 0; i < RANDOM_SAMPLES; i++) {
+		for (int i = 0; i < sources.size(); i++) {
 
 			Instance src = sources.get(i);
 			Instance tgt = targets.get(i);
@@ -124,6 +120,22 @@ public class FilterBuilder {
 		LOGGER.info("Filters done.");
 
 		return rankList;
+	}
+
+	private ArrayList<Instance> getTestSamples(Arg arg) {
+		ArrayList<Instance> resources = new ArrayList<Instance>();
+		Instance res;
+		if(arg == Arg.SOURCE) {
+			res = new Instance("http://dblp.rkbexplorer.com/id/conf/sigmod/GuhaJKSY02");
+			res.setProcessing(srcPro);
+			CBDBuilder.build(srcPro, resources);
+		} else {
+			res = new Instance("http://acm.rkbexplorer.com/id/313897");
+			res.setProcessing(tgtPro);
+			CBDBuilder.build(tgtPro, resources);
+		}
+		resources.add(res);
+		return resources;
 	}
 
 	/**

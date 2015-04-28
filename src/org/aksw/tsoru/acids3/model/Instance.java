@@ -3,7 +3,6 @@ package org.aksw.tsoru.acids3.model;
 import java.util.ArrayList;
 
 import org.aksw.tsoru.acids3.db.Tuple;
-import org.aksw.tsoru.acids3.io.Processing;
 
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
@@ -13,8 +12,6 @@ public class Instance extends GeneralNode {
 
 	private ArrayList<Tuple> tuples;
 	
-	private Processing processing;
-
 	private boolean crawled = false;
 
 	public Instance(String uri) {
@@ -47,14 +44,6 @@ public class Instance extends GeneralNode {
 				processing
 		));	}
 
-	public Processing getProcessing() {
-		return processing;
-	}
-
-	public void setProcessing(Processing processing) {
-		this.processing = processing;
-	}
-	
 	public void setCrawled(boolean crawled) {
 		this.crawled = crawled;
 	}

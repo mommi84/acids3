@@ -58,12 +58,11 @@ public class Tuple {
 		this.subj = new Instance(s);
 		this.subj.setProcessing(pro);
 		
-		if(otype.equals("URI")) {
+		if(otype.equals("URI"))
 			this.obj = new Instance(o);
-			((Instance) this.obj).setProcessing(pro);
-		}
 		else
 			this.obj = new DatatypeNode(o);
+		this.obj.setProcessing(pro);
 	}
 	
 	public String toString() {

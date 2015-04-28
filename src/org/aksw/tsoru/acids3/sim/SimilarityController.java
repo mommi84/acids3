@@ -40,7 +40,7 @@ public class SimilarityController {
 		}
 
 		Double d = sim.compute(s, t, ex, depth);
-		LOGGER.trace(sim.getClass().getSimpleName()+"("+s+", "+t+ ", depth="+depth+") = "+d);
+//		LOGGER.trace(sim.getClass().getSimpleName()+"("+s+", "+t+ ", depth="+depth+") = "+d);
 		return d;
 	
 	}
