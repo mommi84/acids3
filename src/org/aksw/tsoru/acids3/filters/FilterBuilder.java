@@ -120,7 +120,7 @@ public class FilterBuilder {
 	 * @return
 	 */
 	private int reduceFilterSize(int size) {
-		return (int) (Math.ceil(Math.sqrt(Math.sqrt(size))));
+		return (int) (Math.floor(Math.sqrt(Math.sqrt(size))));
 	}
 
 }

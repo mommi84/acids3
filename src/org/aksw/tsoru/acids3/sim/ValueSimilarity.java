@@ -1,6 +1,7 @@
 package org.aksw.tsoru.acids3.sim;
 
 import org.aksw.tsoru.acids3.model.DatatypeNode;
+import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.aksw.tsoru.acids3.similarity.value.WEDSimilarity;
 
@@ -13,7 +14,7 @@ public class ValueSimilarity implements NodeSimilarity {
 	private static final WEDSimilarity WED_SIM = new WEDSimilarity();
 	
 	@Override
-	public Double compute(GeneralNode s, GeneralNode t, int depth) {
+	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
 
 		DatatypeNode sObj = (DatatypeNode) s;
 		DatatypeNode tObj = (DatatypeNode) t;
@@ -35,8 +36,6 @@ public class ValueSimilarity implements NodeSimilarity {
 		if(max == 0.0) // both are 0.0
 			return 1.0;
 		Double v = 1.0 - Math.abs(sVal - tVal) / max;
-		if(v.isNaN())
-			System.out.println(sObj + " & " + tObj);
 		return v;
 		
 	}

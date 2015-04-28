@@ -3,6 +3,7 @@ package org.aksw.tsoru.acids3.sim;
 import java.util.ArrayList;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
@@ -16,7 +17,7 @@ import org.apache.commons.math3.stat.descriptive.moment.Mean;
 public class InstanceSimilarity implements NodeSimilarity {
 
 	@Override
-	public Double compute(GeneralNode s, GeneralNode t, int depth) {
+	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
 		
 		depth = depth + 1;
 		if(depth > MAX_DEPTH)
@@ -33,11 +34,7 @@ public class InstanceSimilarity implements NodeSimilarity {
 				GeneralNode sObj = ts.getObj();
 				GeneralNode tObj = tt.getObj();
 				
-				if(sObj.getID().equals("null"))
-					LOGGER.warn("");
-
-				Double d = SimilarityController.compute(sObj, tObj, depth);
-				LOGGER.info("instance_sim("+sObj+","+tObj+ ") = "+d);
+				Double d = SimilarityController.compute(sObj, tObj, ex, depth);
 				// if depth too deep, d is null
 				if(d != null)
 					features.add(d);

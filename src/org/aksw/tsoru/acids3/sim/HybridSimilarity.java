@@ -1,5 +1,6 @@
 package org.aksw.tsoru.acids3.sim;
 
+import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 
 /**
@@ -9,7 +10,7 @@ import org.aksw.tsoru.acids3.model.GeneralNode;
 public class HybridSimilarity implements NodeSimilarity {
 
 	@Override
-	public Double compute(GeneralNode s, GeneralNode t, int depth) {
+	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
 		// TODO Similarity among URI and datatype...
 		return 0.0;
 	}

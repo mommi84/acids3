@@ -3,12 +3,15 @@ package org.aksw.tsoru.acids3.sim;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.apache.log4j.Logger;
 
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
  *
  */
 public class SimilarityController {
+	
+	private static final Logger LOGGER = Logger.getLogger(SimilarityController.class);
 	
 	private static final InstanceSimilarity NODE_SIM = new InstanceSimilarity();
 	private static final ValueSimilarity VALUE_SIM = new ValueSimilarity();
@@ -22,18 +25,24 @@ public class SimilarityController {
 	 * @param depth visit iteration depth
 	 * @return similarity value
 	 */
-	public static Double compute(GeneralNode s, GeneralNode t, int depth) {
+	public static Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
+		NodeSimilarity sim;
 		if(s instanceof Instance) {
 			if(t instanceof Instance)
-				return NODE_SIM.compute(s, t, depth);
+				sim = NODE_SIM;
 			else
-				return HYBRID_SIM.compute(s, t, depth);
+				sim = HYBRID_SIM;
 		} else {
 			if(t instanceof Instance)
-				return HYBRID_SIM.compute(s, t, depth);
+				sim = HYBRID_SIM;
 			else
-				return VALUE_SIM.compute(s, t, depth);
+				sim = VALUE_SIM;
 		}
+
+		Double d = sim.compute(s, t, ex, depth);
+		LOGGER.trace(sim.getClass().getSimpleName()+"("+s+", "+t+ ", depth="+depth+") = "+d);
+		return d;
+	
 	}
 	
 	/**
@@ -43,7 +52,7 @@ public class SimilarityController {
 	 * @return
 	 */
 	public static Double compute(Example e) {
-		return compute(e.getSource(), e.getTarget(), 0);
+		return compute(e.getSource(), e.getTarget(), e, 0);
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.aksw.tsoru.acids3.sim;
 
+import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
 import org.apache.log4j.Logger;
 
@@ -13,6 +14,6 @@ public interface NodeSimilarity {
 	
 	static final Logger LOGGER = Logger.getLogger(NodeSimilarity.class);
 	
-	public Double compute(GeneralNode s, GeneralNode t, int depth);
+	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth);
 	
 }

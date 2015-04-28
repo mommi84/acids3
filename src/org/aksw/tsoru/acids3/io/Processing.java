@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
  */
 public class Processing {
 	
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Processing.class);
 	private static String base = "file://" + System.getProperty("user.dir") + "/";
 	
