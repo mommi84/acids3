@@ -24,7 +24,7 @@ public class FilterBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(FilterBuilder.class);
 
-	private static final int RANDOM_SAMPLES = 1; // 50;
+	private static final int RANDOM_SAMPLES = 50;
 
 	private Processing srcPro, tgtPro;
 
@@ -47,11 +47,11 @@ public class FilterBuilder {
 
 		HashMap<String, AllowedFilter> ranks = new HashMap<String, AllowedFilter>();
 
-//		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
-//		ArrayList<Instance> targets = tgtPro.randomPick(RANDOM_SAMPLES);
+		ArrayList<Instance> sources = srcPro.randomPick(RANDOM_SAMPLES);
+		ArrayList<Instance> targets = tgtPro.randomPick(RANDOM_SAMPLES);
 		
-		ArrayList<Instance> sources = getTestSamples(Arg.SOURCE);
-		ArrayList<Instance> targets = getTestSamples(Arg.TARGET);
+//		ArrayList<Instance> sources = getTestSamples(Arg.SOURCE);
+//		ArrayList<Instance> targets = getTestSamples(Arg.TARGET);
 		
 		for (int i = 0; i < sources.size(); i++) {
 
@@ -69,7 +69,8 @@ public class FilterBuilder {
 				LOGGER.trace("tgt: "+t);
 			
 			Double sim = SimilarityController.compute(ex);
-			LOGGER.info("sim("+ex+") = "+sim);
+			ex.setSim(sim);
+			LOGGER.info("sim: "+ex);
 
 			// for each pair of tuples, compute their similarity and push it
 			// in the feature array for the corresponding measure.

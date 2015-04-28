@@ -57,7 +57,7 @@ public class Example {
 	}
 	
 	public String toString() {
-		return "<" + source.getID() + ", " + target.getID() + ", " + sim + ">";
+		return "< " + source.getID() + ", " + target.getID() + ", " + sim + " >";
 	}
 
 	public void setParent(boolean parent) {
