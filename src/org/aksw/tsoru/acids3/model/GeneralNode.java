@@ -32,5 +32,14 @@ public abstract class GeneralNode {
 	public void setProcessing(Processing processing) {
 		this.processing = processing;
 	}
+	
+	public boolean isSuperconnected() {
+		if(processing.getHubs().contains(id))
+			return true;
+		if(processing.getAuths().contains(id))
+			return true;
+		return false;
+	}
+
 
 }

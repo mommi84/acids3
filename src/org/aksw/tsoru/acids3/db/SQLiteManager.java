@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.io.Arg;
 import org.aksw.tsoru.acids3.io.Processing;
+import org.aksw.tsoru.acids3.math.OtsuMethod;
 import org.aksw.tsoru.acids3.util.NodeUtils;
 import org.aksw.tsoru.acids3.util.Randomly;
 import org.apache.log4j.Logger;
@@ -261,7 +262,50 @@ public class SQLiteManager {
 
 		return 0;
 	}
+	
+	/**
+	 * Return the list of hub URIs.
+	 * 
+	 * @return
+	 */
+	public TreeSet<String> hubs() {
+		
+		TreeSet<String> results = new TreeSet<String>();
+		
+		String q = "select s as id, p, count(*) as c from triples group by id, p order by c desc;";
 
+		try {
+			OtsuMethod.otsu(statement, q, results, "hubs");
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
+		}
+		
+		return results;
+	}
+
+	/**
+	 * Return the list of authority URIs.
+	 * 
+	 * @return
+	 */
+	public TreeSet<String> auths() {
+		
+		TreeSet<String> results = new TreeSet<String>();
+		
+		String q = "select o as id, p, count(*) as c from triples group by id, p order by c desc;";
+
+		try {
+			OtsuMethod.otsu(statement, q, results, "auths");
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error("Query: " + q);
+		}
+		
+		return results;
+	}
+	
+	
 	public Processing getProcessing() {
 		return processing;
 	}

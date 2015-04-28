@@ -15,7 +15,7 @@ public class Parameters {
 	 * Paths.
 	 */
 	private String sourcePath, targetPath, oraclePath;
-	
+
 	/**
 	 * Number of queries to the oracle per round.
 	 */
@@ -32,6 +32,13 @@ public class Parameters {
 	 * examples.
 	 */
 	public static final int EX_PER_QUERY = 5;
+
+	/**
+	 * A node is a hub (respectively, an authority) if exists one property for
+	 * which the number of connected objects is at least HUB_AUTH_RATE times the
+	 * Otsu threshold.
+	 */
+	public static final double HUB_AUTH_COEFF = .5;
 
 	public Parameters() {
 		super();
@@ -65,18 +72,20 @@ public class Parameters {
 	}
 
 	public String getPath(Arg arg) {
-		if(arg == Arg.SOURCE)
+		if (arg == Arg.SOURCE)
 			return getSourcePath();
-		if(arg == Arg.TARGET)
+		if (arg == Arg.TARGET)
 			return getTargetPath();
 		return null;
 	}
 
 	public String getDir(Arg arg) {
-		if(arg == Arg.SOURCE)
-			return getSourcePath().substring(0, getSourcePath().lastIndexOf('/'));
-		if(arg == Arg.TARGET)
-			return getTargetPath().substring(0, getTargetPath().lastIndexOf('/'));
+		if (arg == Arg.SOURCE)
+			return getSourcePath().substring(0,
+					getSourcePath().lastIndexOf('/'));
+		if (arg == Arg.TARGET)
+			return getTargetPath().substring(0,
+					getTargetPath().lastIndexOf('/'));
 		return null;
 	}
 

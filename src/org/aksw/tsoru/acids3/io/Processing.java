@@ -27,6 +27,8 @@ public class Processing {
 	
 	private SQLiteManager sql;
 	
+	private TreeSet<String> hubs, auths;
+	
 	private final Arg arg;
 	private Parameters param;
 	private TreeSet<String> index;
@@ -39,6 +41,8 @@ public class Processing {
 		this.arg = arg;
 		this.param = param;
 		sql = new SQLiteManager(this, param.getPath(arg));
+		hubs = new TreeSet<String>();
+		auths = new TreeSet<String>();
 	}
 	
 	public SQLiteManager getSql() {
@@ -107,6 +111,22 @@ public class Processing {
 	
 	public void setLogsim(String p, LogarithmicSimilarity logsim) {
 		logsims.put(p, logsim);
+	}
+	
+	public TreeSet<String> getHubs() {
+		return hubs;
+	}
+
+	public TreeSet<String> getAuths() {
+		return auths;
+	}
+
+	public void setHubs(TreeSet<String> hubs) {
+		this.hubs = hubs;
+	}
+
+	public void setAuths(TreeSet<String> auths) {
+		this.auths = auths;
 	}
 
 }

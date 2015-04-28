@@ -173,6 +173,9 @@ public class Indexer {
 		
 		instances.removeAll(properties);
 		
+		p.setHubs(sql.hubs());
+		p.setAuths(sql.auths());
+		
 		return instances;
 		
 	}
