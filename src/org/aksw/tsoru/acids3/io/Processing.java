@@ -10,7 +10,7 @@ import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.sim.SimType;
-import org.aksw.tsoru.acids3.similarity.value.LogarithmicSimilarity;
+import org.aksw.tsoru.acids3.sim.value.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
 

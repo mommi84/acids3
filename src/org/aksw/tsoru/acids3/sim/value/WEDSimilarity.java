@@ -1,11 +1,11 @@
-package org.aksw.tsoru.acids3.similarity.value;
+package org.aksw.tsoru.acids3.sim.value;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import org.aksw.tsoru.acids3.similarity.functions.WeightedEditDistanceExtended;
+import org.aksw.tsoru.acids3.sim.functions.WeightedEditDistanceExtended;
 import org.aksw.tsoru.acids3.util.Transform;
 
 /**

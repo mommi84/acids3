@@ -5,7 +5,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
-import org.aksw.tsoru.acids3.similarity.value.LogarithmicSimilarity;
+import org.aksw.tsoru.acids3.sim.value.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.aksw.tsoru.acids3.util.URLs;
 import org.apache.jena.riot.RDFDataMgr;

@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.similarity.functions;
+package org.aksw.tsoru.acids3.sim.functions;
 
 /*
  * LingPipe v. 4.1.0

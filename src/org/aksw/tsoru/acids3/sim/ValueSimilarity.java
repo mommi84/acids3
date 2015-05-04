@@ -3,7 +3,7 @@ package org.aksw.tsoru.acids3.sim;
 import org.aksw.tsoru.acids3.model.DatatypeNode;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.GeneralNode;
-import org.aksw.tsoru.acids3.similarity.value.WEDSimilarity;
+import org.aksw.tsoru.acids3.sim.value.WEDSimilarity;
 
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>

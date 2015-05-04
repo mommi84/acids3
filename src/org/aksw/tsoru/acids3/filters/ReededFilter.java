@@ -3,7 +3,7 @@ package org.aksw.tsoru.acids3.filters;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.aksw.tsoru.acids3.similarity.value.WEDSimilarity;
+import org.aksw.tsoru.acids3.sim.value.WEDSimilarity;
 import org.aksw.tsoru.acids3.util.Transform;
 import org.apache.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package org.aksw.tsoru.acids3.similarity.value;
+package org.aksw.tsoru.acids3.sim.value;
 
 import java.util.HashMap;
 
