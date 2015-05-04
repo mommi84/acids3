@@ -38,7 +38,7 @@ public class SMOSVMClassifier {
 
 	public void init(Example ex, int nInst) {
 
-		int nAttr = ex.getFeatures().size();
+		int nAttr = ex.getFeatureValues().size();
 		names = new ArrayList<String>(ex.getFeatureNames());
 
 		attributes = new ArrayList<Attribute>();
@@ -68,7 +68,7 @@ public class SMOSVMClassifier {
 
 	public void addInstance(Example ex) {
 
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatures());
+		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size() + 1);
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));
@@ -85,7 +85,7 @@ public class SMOSVMClassifier {
 
 	public void addTestInstance(Example ex) {
 
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatures());
+		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size() + 1);
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));
@@ -130,7 +130,7 @@ public class SMOSVMClassifier {
 	public boolean classify(Example ex) {
 		test = new Instances("sameAs", fvWekaAttributes, 1);
 		test.setClassIndex(fvWekaAttributes.size() - 1);
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatures());
+		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size());
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));

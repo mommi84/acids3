@@ -53,10 +53,12 @@ public class OtsuMethod {
 		// collect IDs
 		ResultSet rs2 = statement.executeQuery(q);
 		while (rs2.next()) {
-			LOGGER.debug(rs2.getInt("c") + " <> " + thr2);
-			if (rs2.getInt("c") < thr2)
+			String id = rs2.getString("id");
+			int count = rs2.getInt("c");
+			LOGGER.trace("Comparing <" + id + "> having " + count + " <=> " + thr2);
+			if (count < thr2)
 				break;
-			results.add(rs2.getString("id"));
+			results.add(id);
 		}
 
 		LOGGER.info(name + " = " + results);

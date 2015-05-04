@@ -41,8 +41,11 @@ public class InstanceSimilarity implements NodeSimilarity {
 				
 				Double d = SimilarityController.compute(sObj, tObj, ex, depth);
 				// if depth too deep, d is null
-				if(d != null)
+				if(d != null) {
 					features.add(d);
+					if(depth == 1)
+						ex.setFeature(ts.getP()+"#"+tt.getP(), d);
+				}
 
 			}
 		}

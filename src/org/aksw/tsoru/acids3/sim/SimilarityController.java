@@ -28,7 +28,7 @@ public class SimilarityController {
 	public static Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
 		
 		if(s.isSuperconnected() || t.isSuperconnected()) {
-			LOGGER.debug(s+" or "+t+" -> superconnected");
+			LOGGER.trace(s+" or "+t+" -> superconnected");
 			return s.getID().equals(t.getID()) ? 1.0 : 0.0;
 		}
 		

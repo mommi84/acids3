@@ -72,12 +72,16 @@ public class Example {
 		this.label  = label;
 	}
 
-	public Collection<Double> getFeatures() {
+	public Collection<Double> getFeatureValues() {
 //		ArrayList<Double> f = new ArrayList<Double>();
 //		for(String key : features.keySet())
 //			f.add(features.get(key));
 //		return f;
 		return features.values();
+	}
+	
+	public HashMap<String, Double> getFeatures() {
+		return features;
 	}
 
 //	public void setFeatures(ArrayList<Double> features) {

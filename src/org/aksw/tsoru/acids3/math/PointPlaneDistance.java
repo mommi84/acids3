@@ -11,7 +11,7 @@ import org.aksw.tsoru.acids3.model.Example;
 public class PointPlaneDistance {
 	
 	public static double compute(Example ex, double[] w, double b) {
-		ArrayList<Double> x = new ArrayList<Double>( ex.getFeatures() );
+		ArrayList<Double> x = new ArrayList<Double>( ex.getFeatureValues() );
 		double sum = 0.0, q = 0.0;
 		for(int i=0; i<w.length; i++) {
 			sum += x.get(i) * w[i];

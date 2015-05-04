@@ -13,7 +13,6 @@ import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
 import org.aksw.tsoru.acids3.sim.SimilarityController;
-import org.aksw.tsoru.acids3.similarity.node.OldTupleSimilarity;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,7 +23,7 @@ public class FilterBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(FilterBuilder.class);
 
-	private static final int RANDOM_SAMPLES = 50;
+	private static final int RANDOM_SAMPLES = 5;
 
 	private Processing srcPro, tgtPro;
 
@@ -71,26 +70,21 @@ public class FilterBuilder {
 			Double sim = SimilarityController.compute(ex);
 			ex.setSim(sim);
 			LOGGER.info("sim: "+ex);
-
-			// for each pair of tuples, compute their similarity and push it
-			// in the feature array for the corresponding measure.
-//			for (Tuple ts : src.getTuples()) {
-//				for (Tuple tt : tgt.getTuples()) {
-//					String measure = "[" + ts.getP() + ", " + tt.getP() + "]";
-//					AllowedFilter rank;
-//					if (ranks.containsKey(measure))
-//						rank = ranks.get(measure);
-//					else {
-//						rank = new AllowedFilter(measure);
-//						ranks.put(measure, rank);
-//					}
-//					Double sim = tsim.compute(ts, tt,
-//							srcPro.getLogsim(ts.getP()),
-//							tgtPro.getLogsim(tt.getP()), ex, rank);
-//					LOGGER.trace("Value for sim_" + measure + " is " + sim);
-//					rank.add(sim);
-//				}
-//			}
+			
+			LOGGER.info(ex.getFeatures());
+			
+			HashMap<String, Double> features = ex.getFeatures();
+			
+			for(String name : features.keySet()) {
+				AllowedFilter rank;
+				if(ranks.containsKey(name))
+					rank = ranks.get(name);
+				else {
+					rank = new AllowedFilter(name);
+					ranks.put(name, rank);
+				}
+				rank.add(features.get(name));
+			}
 			
 		}
 		// important!
@@ -123,6 +117,7 @@ public class FilterBuilder {
 		return rankList;
 	}
 
+	@SuppressWarnings("unused")
 	private ArrayList<Instance> getTestSamples(Arg arg) {
 		ArrayList<Instance> resources = new ArrayList<Instance>();
 		Instance res;
