@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import org.aksw.tsoru.acids3.sim.SimType;
+
 
 /**
  * @author Tommaso Soru <tsoru@informatik.uni-leipzig.de>
@@ -18,6 +20,8 @@ public class Example {
 	private Double sim;
 
 	private boolean parent = true;
+	
+	private boolean unsupervised = false;
 
 	public boolean getLabel() {
 		return label;
@@ -121,6 +125,24 @@ public class Example {
 			if(!features.containsKey(name))
 				features.put(name, 0.0);
 		
+	}
+
+	/**
+	 * Forward request to the Processing.
+	 * 
+	 * @param fname
+	 * @param type
+	 */
+	public void countFeatureRecord(String fname, SimType type) {
+		source.getProcessing().countFeatureRecord(fname, type);
+	}
+
+	public boolean isUnsupervised() {
+		return unsupervised;
+	}
+
+	public void setUnsupervised(boolean unsupervised) {
+		this.unsupervised = unsupervised;
 	}
 	
 }

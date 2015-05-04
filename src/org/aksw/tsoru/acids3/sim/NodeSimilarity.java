@@ -14,6 +14,6 @@ public interface NodeSimilarity {
 	
 	static final Logger LOGGER = Logger.getLogger(NodeSimilarity.class);
 	
-	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth);
+	public SimilarityBean compute(GeneralNode s, GeneralNode t, Example ex, int depth);
 	
 }

@@ -80,6 +80,12 @@ public class Algorithm implements Runnable {
 				src.setProcessing(srcPro);
 				
 				ArrayList<Example> topM = tgtPro.topMatches(src, allowedFilters);
+				if(topM.isEmpty()) {
+					LOGGER.info("No candidate target found. Skipping...");
+					j--;
+					continue;
+				}
+					
 				for(Example ex : topM) {
 					String s = ex.getSource().getID();
 					String t = ex.getTarget().getID();

@@ -14,7 +14,9 @@ public class ValueSimilarity implements NodeSimilarity {
 	private static final WEDSimilarity WED_SIM = new WEDSimilarity();
 	
 	@Override
-	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
+	public SimilarityBean compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
+		
+		SimilarityBean bean = new SimilarityBean();
 
 		DatatypeNode sObj = (DatatypeNode) s;
 		DatatypeNode tObj = (DatatypeNode) t;
@@ -30,13 +32,17 @@ public class ValueSimilarity implements NodeSimilarity {
 		} catch (NumberFormatException e) {
 			// string similarity
 			Double d = WED_SIM.compute(sValue, tValue);
-			return d;
+			bean.setType(SimType.STRING_SIM);
+			bean.setValue(d);
+			return bean;
 		}
 		double max = Math.max(sVal, tVal);
+		bean.setType(SimType.DOUBLE_SIM);
 		if(max == 0.0) // both are 0.0
-			return 1.0;
-		Double v = 1.0 - Math.abs(sVal - tVal) / max;
-		return v;
+			bean.setValue(1.0);
+		else
+			bean.setValue(1.0 - Math.abs(sVal - tVal) / max);
+		return bean;
 		
 	}
 

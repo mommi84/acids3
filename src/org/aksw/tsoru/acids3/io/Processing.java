@@ -9,6 +9,7 @@ import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.sim.SimType;
 import org.aksw.tsoru.acids3.similarity.value.LogarithmicSimilarity;
 import org.aksw.tsoru.acids3.util.Cache;
 import org.apache.log4j.Logger;
@@ -19,11 +20,19 @@ import org.apache.log4j.Logger;
  */
 public class Processing {
 	
+	
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = Logger.getLogger(Processing.class);
 	private static String base = "file://" + System.getProperty("user.dir") + "/";
 	
 	// TODO Replace this with a simple cache for "extrema".
 	private HashMap<String, LogarithmicSimilarity> logsims = new HashMap<String, LogarithmicSimilarity>();
+	
+	/**
+ 	 * TODO Arrange this better...
+	 * Map between feature names and their similarity type counts.
+	 */
+	private static HashMap<String, HashMap<SimType, Integer>> map = new HashMap<String, HashMap<SimType, Integer>>();
 	
 	private SQLiteManager sql;
 	
@@ -96,9 +105,7 @@ public class Processing {
 	}
 
 	public ArrayList<Example> topMatches(Instance src, final ArrayList<AllowedFilter> allowedFilters) {
-		LOGGER.fatal("End of the world reached.");
-		return null;
-//		return GetTopMatches.get(this, src, allowedFilters);
+		return GetTopMatches.get(this, src, allowedFilters);
 	}
 	
 	public void close() {
@@ -128,5 +135,33 @@ public class Processing {
 	public void setAuths(TreeSet<String> auths) {
 		this.auths = auths;
 	}
-
+	
+	public void countFeatureRecord(String fname, SimType type) {
+		HashMap<SimType, Integer> subMap;
+		if(map.containsKey(fname)) {
+			subMap = map.get(fname);
+		} else {
+			subMap = new HashMap<SimType, Integer>();
+			map.put(fname, subMap);
+		}
+		if(subMap.containsKey(type))
+			subMap.put(type, subMap.get(type) + 1);
+		else
+			subMap.put(type, 1);
+	}
+	
+	public SimType simTypeOf(String fname) {
+		HashMap<SimType, Integer> subMap = map.get(fname);
+		SimType top = null;
+		int max = 0;
+		for(SimType type : subMap.keySet()) {
+			Integer count = subMap.get(type);
+			if(count > max) {
+				max = count;
+				top = type;
+			}
+		}
+		return top;
+	}
+ 
 }

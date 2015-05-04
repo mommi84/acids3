@@ -21,6 +21,8 @@ public class ReededFilter {
 
 	private static HashMap<String, Vector<Character>> index = new HashMap<String, Vector<Character>>();
 	
+	private static double tau;
+	
 	public ReededFilter() {
 		super();
 	}
@@ -49,6 +51,41 @@ public class ReededFilter {
 				cs.add(sp.charAt(i));
 			index.put(sp, cs);
 		}
+		if(index.containsKey(tp))
+			ct = index.get(tp);
+		else {
+			ct = new Vector<Character>();
+			for(int i=0; i<tp.length(); i++)
+				ct.add(tp.charAt(i));
+			index.put(tp, ct);
+		}
+		
+		if (Math.abs(sp.length() - tp.length()) <= tau
+				&& Math.ceil(exclDisjSize(cs, ct) / 2.0) <= tau)
+			return true;
+
+		return false;
+	}
+	
+	public Vector<Character> indexSource(String sp) {
+		Vector<Character> cs;
+		if(index.containsKey(sp))
+			cs = index.get(sp);
+		else {
+			cs = new Vector<Character>();
+			for(int i=0; i<sp.length(); i++)
+				cs.add(sp.charAt(i));
+			index.put(sp, cs);
+		}
+		return cs;
+	}
+	
+	public void computeTau(double theta) {
+		tau = Transform.toDistance(theta) / WEDSimilarity.getMinWeight();
+	}
+	
+	public boolean filterTargets(String sp, Vector<Character> cs, String tp) {
+		Vector<Character> ct;
 		if(index.containsKey(tp))
 			ct = index.get(tp);
 		else {

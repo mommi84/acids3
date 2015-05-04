@@ -12,6 +12,7 @@ import org.aksw.tsoru.acids3.io.CBDBuilder;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
+import org.aksw.tsoru.acids3.sim.SimType;
 import org.aksw.tsoru.acids3.sim.SimilarityController;
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,7 @@ public class FilterBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(FilterBuilder.class);
 
-	private static final int RANDOM_SAMPLES = 5;
+	private static final int RANDOM_SAMPLES = 50;
 
 	private Processing srcPro, tgtPro;
 
@@ -61,13 +62,14 @@ public class FilterBuilder {
 			tgt.setProcessing(tgtPro);
 
 			Example ex = new Example(src, tgt);
+			ex.setUnsupervised(true);
 			
 			for(Tuple t : src.getTuples())
 				LOGGER.trace("src: "+t);
 			for(Tuple t : tgt.getTuples())
 				LOGGER.trace("tgt: "+t);
 			
-			Double sim = SimilarityController.compute(ex);
+			Double sim = SimilarityController.compute(ex).getValue();
 			ex.setSim(sim);
 			LOGGER.info("sim: "+ex);
 			
@@ -87,6 +89,13 @@ public class FilterBuilder {
 			}
 			
 		}
+		
+		// remove non-string features
+		Iterator<String> it = ranks.keySet().iterator();
+		while(it.hasNext())
+			if(srcPro.simTypeOf(it.next()) != SimType.STRING_SIM)
+				it.remove();
+		
 		// important!
 		srcPro.getCache().resetInstances();
 		tgtPro.getCache().resetInstances();
@@ -105,11 +114,12 @@ public class FilterBuilder {
 				return o2.median().compareTo(o1.median());
 			}
 		});
-		Iterator<AllowedFilter> it = rankList.iterator();
-		for (int i = 0; it.hasNext(); i++) {
-			it.next();
+		// reduce
+		Iterator<AllowedFilter> it2 = rankList.iterator();
+		for (int i = 0; it2.hasNext(); i++) {
+			it2.next();
 			if (i >= AF_SIZE)
-				it.remove();
+				it2.remove();
 		}
 		LOGGER.debug("Allowed filter list (size=" + AF_SIZE + "): " + rankList);
 		LOGGER.info("Filters done.");
@@ -136,13 +146,13 @@ public class FilterBuilder {
 
 	/**
 	 * The number of filters that should be selected among the top ranked.
-	 * Default is 4sqrt(size).
+	 * Default is sqrt(size).
 	 * 
 	 * @param size
 	 * @return
 	 */
 	private int reduceFilterSize(int size) {
-		return (int) (Math.floor(Math.sqrt(Math.sqrt(size))));
+		return (int) (Math.floor(Math.sqrt(size)));
 	}
 
 }

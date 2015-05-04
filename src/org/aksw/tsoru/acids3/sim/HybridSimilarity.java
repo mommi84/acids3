@@ -10,9 +10,12 @@ import org.aksw.tsoru.acids3.model.GeneralNode;
 public class HybridSimilarity implements NodeSimilarity {
 
 	@Override
-	public Double compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
+	public SimilarityBean compute(GeneralNode s, GeneralNode t, Example ex, int depth) {
+		SimilarityBean bean = new SimilarityBean();
+		bean.setType(SimType.HYBRID_SIM);
 		// TODO Similarity among URI and datatype...
-		return 0.0;
+		bean.setValue(0.0);
+		return bean;
 	}
 
 }
