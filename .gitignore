@@ -15,6 +15,7 @@ hs_err_pid*
 *~
 /target/
 data/
+local/
 .project
 .classpath
 .settings/

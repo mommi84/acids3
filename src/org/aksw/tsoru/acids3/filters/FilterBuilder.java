@@ -142,7 +142,7 @@ public class FilterBuilder {
 	private void exportRankList(ArrayList<AllowedFilter> rankList) {
 		PrintWriter pw = null;
 		try {
-			pw = new PrintWriter(new File("measures.csv"));
+			pw = new PrintWriter(new File("local/measures.csv"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

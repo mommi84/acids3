@@ -36,6 +36,8 @@ public class SimilarityController {
 			return bean;
 		}
 		
+		// TODO handle for evaluation...
+		
 		NodeSimilarity sim;
 		if(s instanceof Instance) {
 			if(t instanceof Instance) {

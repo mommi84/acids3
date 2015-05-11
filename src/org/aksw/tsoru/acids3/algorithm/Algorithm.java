@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.evaluation.Evaluation;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.filters.FilterBuilder;
 import org.aksw.tsoru.acids3.io.Arg;
@@ -113,8 +114,10 @@ public class Algorithm implements Runnable {
 			
 			svm.init(training.get(0), training.size());
 			
-			for(Example ex : training)
+			for(Example ex : training) {				
+				// build training set
 				svm.addInstance(ex);
+			}
 			
 			svm.train(true);
 			
@@ -124,7 +127,7 @@ public class Algorithm implements Runnable {
 						+ " | c(x) = " + svm.classify(ex));
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
-//			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
+			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
 		}
 		
 		srcPro.close();
