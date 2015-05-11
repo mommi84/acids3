@@ -25,10 +25,10 @@ public class AllowedFilter {
 	
 	private ArrayList<Double> stripZeros() {
 		ArrayList<Double> dbl = new ArrayList<Double>(this.xs);
-		Iterator<Double> it = dbl.iterator();
-		while(it.hasNext())
-			if(it.next() == 0.0)
-				it.remove();
+//		Iterator<Double> it = dbl.iterator();
+//		while(it.hasNext())
+//			if(it.next() == 0.0)
+//				it.remove();
 		return dbl;
 	}
 
@@ -52,7 +52,7 @@ public class AllowedFilter {
 	
 	/**
 	 * A score for the property mapping.
-	 * 
+	 * TODO use this.
 	 * @return
 	 */
 	public Double score() {

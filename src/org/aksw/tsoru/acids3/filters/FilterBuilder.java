@@ -1,5 +1,8 @@
 package org.aksw.tsoru.acids3.filters;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +106,9 @@ public class FilterBuilder {
 		ArrayList<AllowedFilter> rankList = new ArrayList<AllowedFilter>(
 				ranks.values());
 		LOGGER.debug("Filter list (size=" + rankList.size() + "): " + rankList);
+		
+		// export rank list (map learning)
+		exportRankList(rankList);
 
 		// allowed filter size
 		final int AF_SIZE = reduceFilterSize(ranks.size());
@@ -125,6 +131,25 @@ public class FilterBuilder {
 		LOGGER.info("Filters done.");
 
 		return rankList;
+	}
+
+	/**
+	 * Warning: experimental!<br>
+	 * Export rank list to make the ground for a training set (map learning).
+	 * 
+	 * @param rankList
+	 */
+	private void exportRankList(ArrayList<AllowedFilter> rankList) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new File("measures.csv"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		for(AllowedFilter af : rankList) {
+			pw.write(af.getMeasure()+","+af.median()+","+af.mean()+","+af.variance()+","+af.max()+","+(double) af.count() / RANDOM_SAMPLES+"\n");
+		}
+		pw.close();
 	}
 
 	@SuppressWarnings("unused")

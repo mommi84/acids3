@@ -35,7 +35,7 @@ public class Parameters {
 
 	/**
 	 * A node is a hub (respectively, an authority) if exists one property for
-	 * which the number of connected objects is at least HUB_AUTH_RATE times the
+	 * which the number of connected objects is at least HUB_AUTH_COEFF times the
 	 * Otsu threshold.
 	 */
 	public static final double HUB_AUTH_COEFF = .5;

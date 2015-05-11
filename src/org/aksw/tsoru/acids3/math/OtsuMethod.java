@@ -29,6 +29,11 @@ public class OtsuMethod {
 		// compute threshold (thr2)
 		rs.next();
 		int max = rs.getInt("c");
+		if(max == 1) {
+			LOGGER.debug("No hub found, as max = 1.");
+			return;
+		}
+		
 		double thr1 = max / 2.0;
 		LOGGER.debug("max = " + max + ", thr1 = " + thr1);
 		int sumHigh = max, occHigh = 1, sumLow = 0, occLow = 0;

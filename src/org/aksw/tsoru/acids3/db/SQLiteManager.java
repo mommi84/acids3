@@ -31,6 +31,7 @@ public class SQLiteManager {
 	private Processing processing;
 
 	private Statement statement;
+
 	private Connection connection;
 	private String dbPrefix;
 
@@ -73,6 +74,29 @@ public class SQLiteManager {
 		}
 
 	}
+	
+	/**
+	 * Connect to an existing database.
+	 * 
+	 * @param dbPath
+	 */
+	public SQLiteManager(String dbPath) {
+		
+		LOGGER.info(dbPath + " opened.");
+
+		try {
+			Class.forName("org.sqlite.JDBC");
+			connection = DriverManager.getConnection("jdbc:sqlite:" + dbPath);
+			connection.setAutoCommit(false);
+			statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+						
+		} catch (ClassNotFoundException | SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+	}
+	
 
 	/**
 	 * @param triple
@@ -310,4 +334,8 @@ public class SQLiteManager {
 		return processing;
 	}
 
+	public Statement getStatement() {
+		return statement;
+	}
 }
+

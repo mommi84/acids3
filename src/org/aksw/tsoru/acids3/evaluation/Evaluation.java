@@ -9,7 +9,7 @@
 //import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
 //import org.aksw.tsoru.acids3.model.Example;
 //import org.aksw.tsoru.acids3.model.Instance;
-//import org.aksw.tsoru.acids3.similarity.node.OverallSimilarity;
+//import org.aksw.tsoru.acids3.sim.SimilarityController;
 //import org.aksw.tsoru.acids3.util.Oracle;
 //import org.apache.log4j.Logger;
 //
@@ -21,7 +21,7 @@
 //
 //	private static final Logger LOGGER = Logger.getLogger(Evaluation.class);
 //
-//	public static void recall(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
+//	public static void recall(SMOSVMClassifier svm, Oracle oracle, Processing srcPro, Processing tgtPro) {
 //		
 //		LOGGER.info("Starting RECALL evaluation");
 //		
@@ -30,7 +30,6 @@
 //		SQLiteManager srcMan = srcPro.getSql();
 //		SQLiteManager tgtMan = tgtPro.getSql();
 //		
-//		OverallSimilarity osim = new OverallSimilarity();
 //		svm.initTest(oracle.getSize());
 //		
 //		LOGGER.info("Theoretical test set size = "+(src.size() * tgt.size()));
@@ -64,7 +63,7 @@
 //			LOGGER.debug("("+i+") Evaluating "+ex+"... (label = "+ex.getLabel()+")");
 //			
 //			// TODO might use filtering for faster evaluation
-//			ex.setSim(osim.compute(ex, null));
+//			ex.setSim(SimilarityController.compute(ex).getValue());
 //			ex.spoil(featureNames);
 //			LOGGER.debug("NAMES: "+ex.getFeatureNames());
 //			LOGGER.debug("FEATS: "+ex.getFeatures());

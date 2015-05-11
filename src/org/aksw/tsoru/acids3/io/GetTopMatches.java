@@ -98,13 +98,13 @@ public class GetTopMatches {
 				continue;
 			results.add(ex);
 			
-			// TODO sort every N loops?
-			Collections.sort(results, new OrderBySimDesc());
-			for(int i=Parameters.EX_PER_QUERY; i<results.size(); i++)
-				results.remove(i);
 			
 		}
 		
+		// TODO sort every N loops?
+		Collections.sort(results, new OrderBySimDesc());
+		for(int i=Parameters.EX_PER_QUERY; i<results.size(); i++)
+			results.remove(i);
 		
 		LOGGER.info("Examples to label: " + results);
 	

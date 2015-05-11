@@ -1,7 +1,6 @@
 package org.aksw.tsoru.acids3.io;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.aksw.tsoru.acids3.db.SQLiteManager;
 import org.aksw.tsoru.acids3.db.Tuple;
@@ -18,10 +17,6 @@ public class CBDBuilder {
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
 	public static void build(Processing p, final ArrayList<Instance> instances) {
-		
-//		final HashMap<String, Instance> uriToInstance = new HashMap<String, Instance>();
-//		for(Instance in : instances)
-//			uriToInstance.put(in.getID(), in);
 		
 		SQLiteManager sql = p.getSql();
 		
