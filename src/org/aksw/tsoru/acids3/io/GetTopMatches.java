@@ -56,7 +56,7 @@ public class GetTopMatches {
 		
 		for(String uri : p.getIndex()) {
 			
-			LOGGER.trace("Trying with <"+uri+">...");
+			LOGGER.debug("Trying with <"+uri+">...");
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			
 			String p2 = Conventions.toSecondProperty(measure.getMeasure());
@@ -66,15 +66,15 @@ public class GetTopMatches {
 					tgtObj.add(t.getO());
 			}
 			// actual filtering
-			boolean passed = false;
-			outer: for(String sp : srcObj)
-				for(String tp : tgtObj)
-					if(filter.filterTargets(sp, sps.get(sp), tp)) {
-						passed = true;
-						break outer;
-					}
-			if(!passed)
-				continue;
+//			boolean passed = false;
+//			outer: for(String sp : srcObj)
+//				for(String tp : tgtObj)
+//					if(filter.filterTargets(sp, sps.get(sp), tp)) {
+//						passed = true;
+//						break outer;
+//					}
+//			if(!passed)
+//				continue;
 			
 			Instance tgt = new Instance(uri);
 			tgt.setProcessing(p);
@@ -103,8 +103,8 @@ public class GetTopMatches {
 		
 		// TODO sort every N loops?
 		Collections.sort(results, new OrderBySimDesc());
-		for(int i=Parameters.EX_PER_QUERY; i<results.size(); i++)
-			results.remove(i);
+		while(results.size() > Parameters.EX_PER_QUERY)
+			results.remove(results.size() - 1);
 		
 		LOGGER.info("Examples to label: " + results);
 	

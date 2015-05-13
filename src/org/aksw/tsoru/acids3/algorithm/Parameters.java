@@ -19,7 +19,7 @@ public class Parameters {
 	/**
 	 * Number of queries to the oracle per round.
 	 */
-	public static final int QUERIES_PER_ROUND = 1;
+	public static final int QUERIES_PER_ROUND = 5;
 
 	/**
 	 * Number of rounds for the active learning setting.
