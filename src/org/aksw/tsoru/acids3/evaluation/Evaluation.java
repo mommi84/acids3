@@ -25,18 +25,16 @@ public class Evaluation {
 		
 		LOGGER.info("Starting RECALL evaluation");
 		
-		ArrayList<String> src = new ArrayList<String>(srcPro.getIndex());
-		ArrayList<String> tgt = new ArrayList<String>(tgtPro.getIndex());
 		SQLiteManager srcMan = srcPro.getSql();
 		SQLiteManager tgtMan = tgtPro.getSql();
 		
-		svm.initTest(oracle.getSize());
+		svm.initTest(oracle.getSourceSize());
 		
-		LOGGER.info("Theoretical test set size = "+(src.size() * tgt.size()));
-		LOGGER.info("Recall evaluation test set size = "+oracle.getSize());
+		LOGGER.info("Theoretical test set size = "+(srcPro.getIndex().size() * tgtPro.getIndex().size()));
+		LOGGER.info("Recall evaluation test set size = "+oracle.getSourceSize());
 		
 		int i = 0;
-		for(String s : oracle.keySet()) {
+		for(String s : oracle.sourceKeySet()) {
 			
 			ArrayList<Tuple> cbd1 = srcMan.getTuples(s);
 			Instance inst1 = new Instance(s);

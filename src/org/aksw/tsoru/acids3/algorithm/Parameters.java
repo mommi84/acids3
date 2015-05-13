@@ -19,7 +19,7 @@ public class Parameters {
 	/**
 	 * Number of queries to the oracle per round.
 	 */
-	public static final int QUERIES_PER_ROUND = 5;
+	public static final int QUERIES_PER_ROUND = 10;
 
 	/**
 	 * Number of rounds for the active learning setting.
@@ -31,7 +31,7 @@ public class Parameters {
 	 * negative) is one, however the research will end after this number of
 	 * examples.
 	 */
-	public static final int EX_PER_QUERY = 5;
+	public static final int EX_PER_QUERY = 1;
 
 	/**
 	 * A node is a hub (respectively, an authority) if exists one property for

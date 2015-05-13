@@ -15,12 +15,13 @@ import com.opencsv.CSVWriter;
 public class Oracle  {
 	
 	private String path;
-	private HashMap<String, String> map;
+	private HashMap<String, String> srcMap, tgtMap;
 	
 	public Oracle(String path) {
 		super();
 		this.path = path;
-		map = new HashMap<String, String>();
+		srcMap = new HashMap<String, String>();
+		tgtMap = new HashMap<String, String>();
 	}
 
 	public void build() throws IOException {
@@ -28,27 +29,28 @@ public class Oracle  {
 				CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER);
 		String[] nextLine = reader.readNext(); // skip header
 		while ((nextLine = reader.readNext()) != null) {
-			map.put(nextLine[0], nextLine[1]);
-			map.put(nextLine[1], nextLine[0]);
+			srcMap.put(nextLine[0], nextLine[1]);
+			tgtMap.put(nextLine[1], nextLine[0]);
 		}
 		reader.close();
 	}
 	
 	public String get(String uri) {
-		return map.get(uri);
+		String x = srcMap.get(uri);
+		return (x != null) ? x : tgtMap.get(uri);
 	}
 	
-	public int getSize() {
-		return map.size();
+	public int getSourceSize() {
+		return srcMap.size();
 	}
 	
-	public Set<String> keySet() {
-		return map.keySet();
+	public Set<String> sourceKeySet() {
+		return srcMap.keySet();
 	}
 
 	public boolean ask(String s, String t) {
-		if(map.containsKey(s))
-			return map.get(s).equals(t);
+		if(srcMap.containsKey(s))
+			return srcMap.get(s).equals(t);
 		return false;
 	}
 

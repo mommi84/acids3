@@ -56,7 +56,7 @@ public class GetTopMatches {
 		
 		for(String uri : p.getIndex()) {
 			
-			LOGGER.debug("Trying with <"+uri+">...");
+			LOGGER.trace("Trying with <"+uri+">...");
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			
 			String p2 = Conventions.toSecondProperty(measure.getMeasure());
@@ -86,14 +86,14 @@ public class GetTopMatches {
 					tgt.addInverse(t);
 			}
 			
-			LOGGER.debug("Target CBD size = "+tgt.getTuples().size());
+			LOGGER.trace("Target CBD size = "+tgt.getTuples().size());
 			
 			// similarity call
 			Example ex = new Example(src, tgt);
 			Double sim = SimilarityController.compute(ex).getValue();
 			if(sim != null) { // example made the cut
 				ex.setSim(sim);
-				LOGGER.debug("sim = "+sim);
+				LOGGER.trace("sim = "+sim);
 			} else // example didn't make the cut
 				continue;
 			results.add(ex);
