@@ -17,21 +17,21 @@ public class Parameters {
 	private String sourcePath, targetPath, oraclePath;
 
 	/**
-	 * Number of queries to the oracle per round.
-	 */
-	public static final int QUERIES_PER_ROUND = 10;
-
-	/**
 	 * Number of rounds for the active learning setting.
 	 */
 	public static final int ROUNDS_ACTIVE = 1;
+	
+	/**
+	 * Number of queries to the oracle per round.
+	 */
+	public static final int QUERIES_PER_ROUND = 5;
 
 	/**
 	 * Maximum number of examples per query. The minimum per kind (positive and
 	 * negative) is one, however the research will end after this number of
 	 * examples.
 	 */
-	public static final int EX_PER_QUERY = 1;
+	public static final int EX_PER_QUERY = 5;
 
 	/**
 	 * A node is a hub (respectively, an authority) if exists one property for

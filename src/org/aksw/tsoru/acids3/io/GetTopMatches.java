@@ -59,13 +59,13 @@ public class GetTopMatches {
 			LOGGER.trace("Trying with <"+uri+">...");
 			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			
-			String p2 = Conventions.toSecondProperty(measure.getMeasure());
-			ArrayList<String> tgtObj = new ArrayList<String>();
-			for(Tuple t : cbd) {
-				if(t.getP().equals(p2))
-					tgtObj.add(t.getO());
-			}
 			// actual filtering
+//			String p2 = Conventions.toSecondProperty(measure.getMeasure());
+//			ArrayList<String> tgtObj = new ArrayList<String>();
+//			for(Tuple t : cbd) {
+//				if(t.getP().equals(p2))
+//					tgtObj.add(t.getO());
+//			}
 //			boolean passed = false;
 //			outer: for(String sp : srcObj)
 //				for(String tp : tgtObj)
@@ -85,6 +85,7 @@ public class GetTopMatches {
 				else
 					tgt.addInverse(t);
 			}
+			tgt.setCrawled(true);
 			
 			LOGGER.trace("Target CBD size = "+tgt.getTuples().size());
 			
