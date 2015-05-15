@@ -127,7 +127,8 @@ public class Algorithm implements Runnable {
 						+ " | c(x) = " + svm.classify(ex));
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
-			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
+//			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
+			Evaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
 		}
 		
 		srcPro.close();

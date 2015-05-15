@@ -29,26 +29,26 @@ public class GetTopMatches {
 	
 	protected static ArrayList<Example> get(Processing p, Instance src, final ArrayList<AllowedFilter> allowedFilters) {
 		
-		AllowedFilter measure = allowedFilters.get(0);
-		LOGGER.info("Selected measure to filter: "+measure);
+//		AllowedFilter measure = allowedFilters.get(0);
+//		LOGGER.info("Selected measure to filter: "+measure);
 		
 		LOGGER.info("Computing similarity matches for property alignment...");
 		
 		ArrayList<Example> results = new ArrayList<Example>();
 		
-		String p1 = Conventions.toFirstProperty(measure.getMeasure());
-		ArrayList<String> srcObj = new ArrayList<String>();
-		for(Tuple t : src.getTuples())
-			if(t.getP().equals(p1))
-				srcObj.add(t.getO());
-		if(srcObj.isEmpty())
-			return results;
-		
-		LOGGER.debug("Preparing to compare SRC objects: "+srcObj);
-		HashMap<String, Vector<Character>> sps = new HashMap<String, Vector<Character>>();
-		for(String sp : srcObj)
-			sps.put(sp, filter.indexSource(sp));
-		filter.computeTau(0.2);
+//		String p1 = Conventions.toFirstProperty(measure.getMeasure());
+//		ArrayList<String> srcObj = new ArrayList<String>();
+//		for(Tuple t : src.getTuples())
+//			if(t.getP().equals(p1))
+//				srcObj.add(t.getO());
+//		if(srcObj.isEmpty())
+//			return results;
+//		
+//		LOGGER.debug("Preparing to compare SRC objects: "+srcObj);
+//		HashMap<String, Vector<Character>> sps = new HashMap<String, Vector<Character>>();
+//		for(String sp : srcObj)
+//			sps.put(sp, filter.indexSource(sp));
+//		filter.computeTau(0.2);
 		
 		LOGGER.info("Searching for targets...");
 		

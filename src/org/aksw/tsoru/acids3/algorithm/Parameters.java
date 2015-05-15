@@ -31,7 +31,7 @@ public class Parameters {
 	 * negative) is one, however the research will end after this number of
 	 * examples.
 	 */
-	public static final int EX_PER_QUERY = 5;
+	public static final int EX_PER_QUERY = 20;
 
 	/**
 	 * A node is a hub (respectively, an authority) if exists one property for

@@ -58,4 +58,44 @@ public class Evaluation {
 		
 	}
 
+	public static void fmeasure(SMOSVMClassifier svm, Oracle oracle,
+			Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
+		LOGGER.info("Starting F-MEASURE evaluation");
+		
+		svm.initTest(oracle.getSourceSize());
+		
+		LOGGER.info("F-Measure evaluation test set size = "+(srcPro.getIndex().size() * tgtPro.getIndex().size()));
+		
+		int i = 0;
+		for(String s : srcPro.getIndex()) {
+			
+			Instance inst1 = new Instance(s);
+			inst1.setProcessing(srcPro);
+			CBDBuilder.build(inst1);
+			
+			for(String t : tgtPro.getIndex()) {
+				
+				Instance inst2 = new Instance(t);
+				inst2.setProcessing(tgtPro);
+				CBDBuilder.build(inst2);
+				
+				Example ex = new Example(inst1, inst2);
+				ex.setLabel(true);
+				LOGGER.debug("("+i+") Evaluating "+ex+"... (label = "+ex.getLabel()+")");
+				
+				// TODO might use filtering for faster evaluation
+				ex.setSim(SimilarityController.compute(ex).getValue());
+				ex.spoil(featureNames);
+//				LOGGER.debug("NAMES: "+ex.getFeatureNames());
+				LOGGER.debug("FEATS: "+ex.getFeatures());
+				
+				svm.addTestInstance(ex);
+				
+				i++;
+			}
+		}
+			
+		svm.evaluate();
+	}
+
 }
