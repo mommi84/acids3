@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.evaluation.Evaluation;
+import org.aksw.tsoru.acids3.evaluation.MultiThreadEvaluation;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.filters.FilterBuilder;
 import org.aksw.tsoru.acids3.io.Arg;
@@ -128,7 +129,12 @@ public class Algorithm implements Runnable {
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
 //			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
-			Evaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
+			try {
+				MultiThreadEvaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		srcPro.close();
