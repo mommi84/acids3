@@ -87,7 +87,7 @@ public class Processing {
 		if(cache.nTriples == null)
 			this.count();
 		ArrayList<Instance> instances = RandomInstance.get(this, N);
-		CBDBuilder.build(this, instances);
+		CBDBuilder.build(instances);
 		return instances;
 	}
 	

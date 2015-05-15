@@ -16,7 +16,12 @@ public class CBDBuilder {
 
 	private static final Logger LOGGER = Logger.getLogger(CBDBuilder.class);
 	
-	public static void build(Processing p, final ArrayList<Instance> instances) {
+	public static void build(final ArrayList<Instance> instances) {
+		
+		if(instances.isEmpty())
+			return;
+		
+		Processing p = instances.get(0).getProcessing();
 		
 		SQLiteManager sql = p.getSql();
 		
@@ -37,10 +42,10 @@ public class CBDBuilder {
 				
 	}
 
-	public static void build(Processing processing, Instance src) {
+	public static void build(Instance src) {
 		ArrayList<Instance> array = new ArrayList<Instance>();
 		array.add(src);
-		build(processing, array);
+		build(array);
 	}
 
 }

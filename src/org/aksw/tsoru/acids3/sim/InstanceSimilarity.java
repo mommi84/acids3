@@ -29,10 +29,10 @@ public class InstanceSimilarity implements NodeSimilarity {
 		
 		Instance src = (Instance) s;
 		if(!src.isCrawled())
-			CBDBuilder.build(src.getProcessing(), src);
+			CBDBuilder.build(src);
 		Instance tgt = (Instance) t;
 		if(!tgt.isCrawled())
-			CBDBuilder.build(tgt.getProcessing(), tgt);
+			CBDBuilder.build(tgt);
 
 		ArrayList<Double> features = new ArrayList<Double>();
 

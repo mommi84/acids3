@@ -159,11 +159,11 @@ public class FilterBuilder {
 		if(arg == Arg.SOURCE) {
 			res = new Instance("http://dblp.rkbexplorer.com/id/conf/sigmod/GuhaJKSY02");
 			res.setProcessing(srcPro);
-			CBDBuilder.build(srcPro, resources);
+			CBDBuilder.build(res);
 		} else {
 			res = new Instance("http://acm.rkbexplorer.com/id/313897");
 			res.setProcessing(tgtPro);
-			CBDBuilder.build(tgtPro, resources);
+			CBDBuilder.build(res);
 		}
 		resources.add(res);
 		return resources;

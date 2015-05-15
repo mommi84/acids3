@@ -1,10 +1,8 @@
 package org.aksw.tsoru.acids3.evaluation;
 
-import java.util.ArrayList;
 import java.util.TreeSet;
 
-import org.aksw.tsoru.acids3.db.SQLiteManager;
-import org.aksw.tsoru.acids3.db.Tuple;
+import org.aksw.tsoru.acids3.io.CBDBuilder;
 import org.aksw.tsoru.acids3.io.Processing;
 import org.aksw.tsoru.acids3.learner.SMOSVMClassifier;
 import org.aksw.tsoru.acids3.model.Example;
@@ -25,9 +23,6 @@ public class Evaluation {
 		
 		LOGGER.info("Starting RECALL evaluation");
 		
-		SQLiteManager srcMan = srcPro.getSql();
-		SQLiteManager tgtMan = tgtPro.getSql();
-		
 		svm.initTest(oracle.getSourceSize());
 		
 		LOGGER.info("Theoretical test set size = "+(srcPro.getIndex().size() * tgtPro.getIndex().size()));
@@ -36,25 +31,13 @@ public class Evaluation {
 		int i = 0;
 		for(String s : oracle.sourceKeySet()) {
 			
-			ArrayList<Tuple> cbd1 = srcMan.getTuples(s);
 			Instance inst1 = new Instance(s);
 			inst1.setProcessing(srcPro);
-			for(Tuple tu : cbd1) {
-				if(tu.getS().equals(s))
-					inst1.add(tu);
-				else
-					inst1.addInverse(tu);
-			}
-			String t = oracle.get(s);
-			ArrayList<Tuple> cbd2 = tgtMan.getTuples(t);
-			Instance inst2 = new Instance(t);
+			CBDBuilder.build(inst1);
+			
+			Instance inst2 = new Instance(oracle.get(s));
 			inst2.setProcessing(tgtPro);
-			for(Tuple tu : cbd2) {
-				if(tu.getS().equals(t))
-					inst2.add(tu);
-				else
-					inst2.addInverse(tu);
-			}
+			CBDBuilder.build(inst2);
 			
 			Example ex = new Example(inst1, inst2);
 			ex.setLabel(true);

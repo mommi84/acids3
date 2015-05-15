@@ -36,8 +36,6 @@ public class GetTopMatches {
 		
 		ArrayList<Example> results = new ArrayList<Example>();
 		
-		SQLiteManager sql = p.getSql();
-		
 		String p1 = Conventions.toFirstProperty(measure.getMeasure());
 		ArrayList<String> srcObj = new ArrayList<String>();
 		for(Tuple t : src.getTuples())
@@ -57,9 +55,9 @@ public class GetTopMatches {
 		for(String uri : p.getIndex()) {
 			
 			LOGGER.trace("Trying with <"+uri+">...");
-			ArrayList<Tuple> cbd = sql.getTuples(uri);
 			
 			// actual filtering
+//			ArrayList<Tuple> cbd = sql.getTuples(uri);
 //			String p2 = Conventions.toSecondProperty(measure.getMeasure());
 //			ArrayList<String> tgtObj = new ArrayList<String>();
 //			for(Tuple t : cbd) {
@@ -78,14 +76,7 @@ public class GetTopMatches {
 			
 			Instance tgt = new Instance(uri);
 			tgt.setProcessing(p);
-			
-			for(Tuple t : cbd) {
-				if(t.getS().equals(uri))
-					tgt.add(t);
-				else
-					tgt.addInverse(t);
-			}
-			tgt.setCrawled(true);
+			CBDBuilder.build(tgt);
 			
 			LOGGER.trace("Target CBD size = "+tgt.getTuples().size());
 			
