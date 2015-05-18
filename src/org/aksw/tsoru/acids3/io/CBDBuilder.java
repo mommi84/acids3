@@ -48,4 +48,36 @@ public class CBDBuilder {
 		build(array);
 	}
 
+	public static void buildMulti(int index, final ArrayList<Instance> instances) {
+		
+		if(instances.isEmpty())
+			return;
+		
+		Processing p = instances.get(0).getProcessing();
+		
+		SQLiteManager sql = p.getSql();
+		
+		for(Instance in : instances) {
+			
+			String uri = in.getID();
+			for(Tuple t : sql.getTuplesMulti(index, uri)) {
+				if(t.getS().equals(uri))
+					in.add(t);
+				else
+					in.addInverse(t);
+			}
+			
+			in.setCrawled(true);
+			LOGGER.trace(uri+" has now "+in.getTuples().size()+" triples.");
+			
+		}
+				
+	}
+
+	public static void buildMulti(int index, Instance src) {
+		ArrayList<Instance> array = new ArrayList<Instance>();
+		array.add(src);
+		buildMulti(index, array);
+	}
+
 }

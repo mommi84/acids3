@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import org.aksw.tsoru.acids3.algorithm.Parameters;
 import org.aksw.tsoru.acids3.db.SQLiteManager;
+import org.aksw.tsoru.acids3.db.Tuple;
 import org.aksw.tsoru.acids3.filters.AllowedFilter;
 import org.aksw.tsoru.acids3.model.Example;
 import org.aksw.tsoru.acids3.model.Instance;
@@ -35,7 +36,7 @@ public class Processing {
 	private static HashMap<String, HashMap<SimType, Integer>> map = new HashMap<String, HashMap<SimType, Integer>>();
 	
 	private SQLiteManager sql;
-	
+
 	private TreeSet<String> hubs, auths;
 	
 	private final Arg arg;
@@ -58,7 +59,6 @@ public class Processing {
 		return sql;
 	}
 	
-
 	public static String getBase() {
 		return base;
 	}

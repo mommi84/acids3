@@ -17,9 +17,11 @@ import weka.core.Instances;
  */
 public class SMOSVMClassifier {
 
-	private static final Logger LOGGER = Logger.getLogger(SMOSVMClassifier.class);
+	private static final Logger LOGGER = Logger
+			.getLogger(SMOSVMClassifier.class);
 
 	private Instances train, test;
+	private ArrayList<Instances> multiTest;
 	private Attribute classAttribute;
 
 	private ArrayList<Attribute> attributes;
@@ -34,6 +36,7 @@ public class SMOSVMClassifier {
 
 	public SMOSVMClassifier() {
 		super();
+		multiTest = new ArrayList<Instances>();
 	}
 
 	public void init(Example ex, int nInst) {
@@ -68,7 +71,8 @@ public class SMOSVMClassifier {
 
 	public void addInstance(Example ex) {
 
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
+		ArrayList<Double> features = new ArrayList<Double>(
+				ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size() + 1);
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));
@@ -85,7 +89,8 @@ public class SMOSVMClassifier {
 
 	public void addTestInstance(Example ex) {
 
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
+		ArrayList<Double> features = new ArrayList<Double>(
+				ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size() + 1);
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));
@@ -130,7 +135,8 @@ public class SMOSVMClassifier {
 	public boolean classify(Example ex) {
 		test = new Instances("sameAs", fvWekaAttributes, 1);
 		test.setClassIndex(fvWekaAttributes.size() - 1);
-		ArrayList<Double> features = new ArrayList<Double>(ex.getFeatureValues());
+		ArrayList<Double> features = new ArrayList<Double>(
+				ex.getFeatureValues());
 		DenseInstance inst = new DenseInstance(features.size());
 		for (int i = 0; i < features.size(); i++)
 			inst.setValue(attributes.get(i), features.get(i));
@@ -179,6 +185,80 @@ public class SMOSVMClassifier {
 
 	public double getBias() {
 		return bias;
+	}
+
+	// ************* MULTI-THREAD METHODS *************
+
+	/**
+	 * Clear all instances from a multi-thread test set.
+	 * 
+	 * @param index
+	 */
+	public void clearMultiTest(int index) {
+		if(index < multiTest.size())
+			multiTest.get(index).clear();
+	}
+
+	/**
+	 * Add and init multi-thread test set.
+	 * 
+	 * @param nInst
+	 */
+	public void addMultiTest(int nInst) {
+		Instances t = new Instances("sameAs", fvWekaAttributes, nInst);
+		t.setClassIndex(fvWekaAttributes.size() - 1);
+		multiTest.add(t);
+	}
+
+	/**
+	 * Add instance to a multi-thread test set.
+	 * 
+	 * @param index
+	 * @param ex
+	 */
+	public void addMultiTestInstance(int index, Example ex) {
+
+		Instances t = multiTest.get(index);
+
+		ArrayList<Double> features = new ArrayList<Double>(
+				ex.getFeatureValues());
+		DenseInstance inst = new DenseInstance(features.size() + 1);
+		for (int i = 0; i < features.size(); i++)
+			inst.setValue(attributes.get(i), features.get(i));
+		inst.setValue(classAttribute, "" + ex.getLabel());
+
+		t.add(inst);
+
+	}
+	
+	/**
+	 * Evaluate a multi-thread test set.
+	 * 
+	 * @param index
+	 */
+	public void evaluateMultiTest(int index) {
+		// Test the model
+		Evaluation eTest;
+		try {
+			eTest = new Evaluation(train);
+			eTest.evaluateModel(cModel, multiTest.get(index));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+			e.printStackTrace();
+			return;
+		}
+
+		// Print the result à la Weka explorer:
+		String strSummary = eTest.toSummaryString();
+		System.out.println(strSummary);
+
+		// Get the confusion matrix
+		double[][] cmMatrix = eTest.confusionMatrix();
+		for (double[] dd : cmMatrix) {
+			for (double d : dd)
+				System.out.print(d + "\t");
+			System.out.println();
+		}
 	}
 
 }

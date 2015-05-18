@@ -31,6 +31,7 @@ public class SQLiteManager {
 	private Processing processing;
 
 	private Statement statement;
+	private ArrayList<Statement> multi;
 
 	private Connection connection;
 	private String dbPrefix;
@@ -48,6 +49,8 @@ public class SQLiteManager {
 		
 		this.processing = processing;
 		this.dbPrefix = dbPrefix;
+		
+		multi = new ArrayList<Statement>();
 
 		filename = dbPrefix + "_" + Randomly.getRandom() + ".db";
 		LOGGER.info(filename + " created.");
@@ -74,6 +77,7 @@ public class SQLiteManager {
 		}
 
 	}
+	
 	
 	/**
 	 * Connect to an existing database.
@@ -202,6 +206,51 @@ public class SQLiteManager {
 
 		return res;
 	}
+	
+	public void addMultiConnection(int n) {
+		for(int i=0; i<n; i++) {
+			try {
+				Connection conn = DriverManager.getConnection("jdbc:sqlite:" + filename);
+				conn.setAutoCommit(false);
+				Statement stat = conn.createStatement();
+				stat.setQueryTimeout(30); // set timeout to 30 sec.
+				multi.add(stat);
+				LOGGER.info("Added object "+stat+" to multi. size="+multi.size());
+			} catch (SQLException e) {
+				LOGGER.error("Could not create statement for multi-threading.");
+				e.printStackTrace();
+			}
+		}
+		
+		// save an immutable list of statements for multi-thread
+		
+	}
+
+	public ArrayList<Tuple> getTuplesMulti(int index, String uri) {
+		
+		LOGGER.info("getting multi["+index+"] where |multi|="+multi.size());
+		
+		Statement st = multi.get(index);
+
+		ArrayList<Tuple> res = new ArrayList<Tuple>();
+
+		ResultSet rs;
+		try {
+			rs = st.executeQuery("select * from triples where s = '"
+					+ uri + "' or (o = '" + uri + "' and otype = 'URI');");
+			// .executeQuery("select * from triples where (s = '"+uri+"' or (o = '"+uri+"' and otype = 'URI')) and p <> '"+URLs.RDF_TYPE+"';");
+			while (rs.next()) {
+				// read the result set
+				Tuple t = new Tuple(rs.getString("s"), rs.getString("p"),
+						rs.getString("o"), rs.getString("otype"), processing);
+				res.add(t);
+			}
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+
+		return res;
+	}
 
 	public void commit() {
 		try {
@@ -222,6 +271,20 @@ public class SQLiteManager {
 	public void close() {
 		try {
 			connection.close();
+		} catch (SQLException e) {
+			LOGGER.error(e.getMessage());
+		}
+		try {
+			new File(filename).delete();
+			LOGGER.info(filename + " deleted.");
+		} catch (Exception x) {
+			LOGGER.error("Cannot delete db: " + filename);
+		}
+	}
+
+	public void closeMulti(int index) {
+		try {
+			multi.get(index).getConnection().close();
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
 		}

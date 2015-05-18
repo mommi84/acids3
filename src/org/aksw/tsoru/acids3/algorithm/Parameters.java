@@ -24,14 +24,14 @@ public class Parameters {
 	/**
 	 * Number of queries to the oracle per round.
 	 */
-	public static final int QUERIES_PER_ROUND = 5;
+	public static final int QUERIES_PER_ROUND = 1;
 
 	/**
 	 * Maximum number of examples per query. The minimum per kind (positive and
 	 * negative) is one, however the research will end after this number of
 	 * examples.
 	 */
-	public static final int EX_PER_QUERY = 20;
+	public static final int EX_PER_QUERY = 1;
 
 	/**
 	 * A node is a hub (respectively, an authority) if exists one property for
