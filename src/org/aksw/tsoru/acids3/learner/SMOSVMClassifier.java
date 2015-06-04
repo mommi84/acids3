@@ -36,7 +36,7 @@ public class SMOSVMClassifier {
 
 	public SMOSVMClassifier() {
 		super();
-		multiTest = new ArrayList<Instances>();
+//		multiTest = new ArrayList<Instances>();
 	}
 
 	public void init(Example ex, int nInst) {
@@ -259,6 +259,14 @@ public class SMOSVMClassifier {
 				System.out.print(d + "\t");
 			System.out.println();
 		}
+	}
+
+	public void clearInstances() {
+		test.clear();
+	}
+
+	public int getInstCount() {
+		return test.size();
 	}
 
 }

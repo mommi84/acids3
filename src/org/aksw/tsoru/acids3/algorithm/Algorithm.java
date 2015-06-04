@@ -129,12 +129,14 @@ public class Algorithm implements Runnable {
 			
 //			PseudoEvaluation.run(svm, oracle, srcPro, tgtPro, featureNames);
 //			Evaluation.recall(svm, oracle, srcPro, tgtPro, trainFeatures);
-			try {
-				MultiThreadEvaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Evaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
+
+//			try {
+//				MultiThreadEvaluation.fmeasure(svm, oracle, srcPro, tgtPro, trainFeatures);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 		
 		srcPro.close();

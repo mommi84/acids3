@@ -60,13 +60,15 @@ public class Evaluation {
 
 	public static void fmeasure(SMOSVMClassifier svm, Oracle oracle,
 			Processing srcPro, Processing tgtPro, TreeSet<String> featureNames) {
+		
 		LOGGER.info("Starting F-MEASURE evaluation");
 		
-		svm.initTest(oracle.getSourceSize());
+		int size = 10 * tgtPro.getIndex().size();
+		svm.initTest(size);
 		
-		LOGGER.info("F-Measure evaluation test set size = "+(srcPro.getIndex().size() * tgtPro.getIndex().size()));
+		LOGGER.info("F-Measure evaluation test set size = "+size);
 		
-		int i = 0;
+		int i = 0, j = 0;
 		for(String s : srcPro.getIndex()) {
 			
 			Instance inst1 = new Instance(s);
@@ -80,22 +82,35 @@ public class Evaluation {
 				CBDBuilder.build(inst2);
 				
 				Example ex = new Example(inst1, inst2);
-				ex.setLabel(true);
-				LOGGER.debug("("+i+") Evaluating "+ex+"... (label = "+ex.getLabel()+")");
+				ex.setLabel(oracle.ask(s, t));
+//				LOGGER.debug("("+i+") Evaluating "+ex+"... (label = "+ex.getLabel()+")");
 				
 				// TODO might use filtering for faster evaluation
 				ex.setSim(SimilarityController.compute(ex).getValue());
 				ex.spoil(featureNames);
 //				LOGGER.debug("NAMES: "+ex.getFeatureNames());
-				LOGGER.debug("FEATS: "+ex.getFeatures());
+//				LOGGER.debug("FEATS: "+ex.getFeatures());
 				
 				svm.addTestInstance(ex);
+//				LOGGER.debug("inst="+svm.getInstCount());
 				
-				i++;
+//				i++;
 			}
+			LOGGER.debug("inst="+svm.getInstCount());
+			
+			if(conditions(j)) {
+				LOGGER.debug("evaluating...");
+				svm.evaluate();
+				svm.clearInstances();
+				LOGGER.debug("cleared");
+			}
+			j++;
 		}
 			
-		svm.evaluate();
+	}
+
+	private static boolean conditions(int j) {
+		return j%10 == 9;
 	}
 
 }
