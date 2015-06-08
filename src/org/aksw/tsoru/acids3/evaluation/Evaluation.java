@@ -63,10 +63,9 @@ public class Evaluation {
 		
 		LOGGER.info("Starting F-MEASURE evaluation");
 		
-		int size = 10 * tgtPro.getIndex().size();
-		svm.initTest(size);
+		svm.initTest(10 * tgtPro.getIndex().size());
 		
-		LOGGER.info("F-Measure evaluation test set size = "+size);
+		LOGGER.info("F-Measure evaluation test set size = "+srcPro.getIndex().size() * tgtPro.getIndex().size());
 		
 		int i = 0, j = 0;
 		for(String s : srcPro.getIndex()) {
